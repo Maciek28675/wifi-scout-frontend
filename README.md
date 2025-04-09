@@ -1,5 +1,7 @@
 # Welcome to your Expo app 👋
 
+In app/index.tsx, in fetch instead of 192.168.1.3 insert your local ip address
+
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Get started
