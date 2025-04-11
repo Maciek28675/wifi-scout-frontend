@@ -24,7 +24,7 @@ export default function HomeScreen(){
           <Text style={styles.headerTitle}>WiFi Scout</Text>
         </View>
         
-        {/* Stats Cards */}
+        {/* Statystyki połączenia*/}
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
             <Text style={[styles.statNumber, {color: '#4CAF50'}]}>157</Text>
@@ -40,7 +40,7 @@ export default function HomeScreen(){
           </View>
         </View>
         
-        {/* WiFi Network Card */}
+        {/* Łączenie z Eduroam*/}
         <View style={styles.networkCard}>
           <Text style={styles.networkName}>Eduroam 2.4</Text>
           <TouchableOpacity style={styles.connectButton}>
@@ -48,11 +48,11 @@ export default function HomeScreen(){
           </TouchableOpacity>
         </View>
         
-        {/* Recent Activity Section */}
+        {/* Sekcja ostatnich aktywności */}
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Ostatnia Aktywność</Text>
           
-          {/* Activity Item - Strong Signal */}
+          {/* Mocny sygnał */}
           <View style={styles.activityItem}>
             <View style={[styles.activityIcon, {backgroundColor: '#4CAF50'}]}>
               <Ionicons name="wifi" size={20} color="white" />
@@ -64,7 +64,7 @@ export default function HomeScreen(){
             <Text style={styles.activityTime}>2 min temu</Text>
           </View>
           
-          {/* Activity Item - Medium Signal */}
+          {/* Średni sygnał */}
           <View style={styles.activityItem}>
             <View style={[styles.activityIcon, {backgroundColor: '#FFC107'}]}>
               <Ionicons name="wifi" size={20} color="white" />
@@ -76,7 +76,7 @@ export default function HomeScreen(){
             <Text style={styles.activityTime}>8 min temu</Text>
           </View>
           
-          {/* Activity Item - Weak Signal */}
+          {/* Słaby sygnał*/}
           <View style={styles.activityItem}>
             <View style={[styles.activityIcon, {backgroundColor: '#E53935'}]}>
               <Ionicons name="wifi" size={20} color="white" />
@@ -85,11 +85,11 @@ export default function HomeScreen(){
               <Text style={styles.activityTitle}>Wykryto słaby sygnał</Text>
               <Text style={styles.activitySubtitle}>C-16 Politechnika Wrocławska</Text>
             </View>
-            <Text style={styles.activityTime}>2 min temu</Text>
+            <Text style={styles.activityTime}>21 min temu</Text>
           </View>
         </View>
         
-        {/* Quick Actions Section */}
+        {/* Szybki wybór */}
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Szybkie Czynności</Text>
           <View style={styles.quickActionsContainer}>
@@ -107,6 +107,7 @@ export default function HomeScreen(){
             </TouchableOpacity>
           </View>
         </View>
+        
       </ScrollView>
     </SafeAreaView>
   );

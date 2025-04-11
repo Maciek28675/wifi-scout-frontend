@@ -15,41 +15,41 @@ export default function TabsLayout() {
             headerTitle: 'Home',
             title: 'Home',
             headerLeft: () => <></>,
-            tabBarIcon: () => (
-              <Ionicons name="home" size={24} color={'white'} />
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" size={size} color={color} />
             ),
             tabBarLabel: 'Home',
           }}
         />
         <Tabs.Screen
-          name="index"
+          name="map"
           options={{
             headerTitle: 'Map',
             title: 'Map',
-            tabBarIcon: () => (
-              <Ionicons name="map" size={24} color={'white'} />
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="map" size={size} color={color} />
             ),
             tabBarLabel: 'Map',
           }}
         />
         <Tabs.Screen
-          name="index"
+          name="forum"
           options={{
             headerTitle: 'Forum',
             title: 'Forum',
-            tabBarIcon: () => (
-              <Ionicons name="people" size={24} color={'white'} />
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="people" size={size} color={color} />
             ),
             tabBarLabel: 'Forum',
           }}
         />
         <Tabs.Screen
-          name="index"
+          name="settings"
           options={{
             headerTitle: 'Settings',
             title: 'Settings',
-            tabBarIcon: () => (
-              <Ionicons name="settings" size={24} color={'white'} />
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="settings" size={size} color={color} />
             ),
             tabBarLabel: 'Settings',
           }}
