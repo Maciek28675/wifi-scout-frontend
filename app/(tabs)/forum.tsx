@@ -1,22 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import BottomNavigation from '../components/bottomNavBar';
-import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../navigation/MainNavigator';
 
-type ForumScreenProps = {
-  navigation: NavigationProp<RootStackParamList>;
-  route: RouteProp<RootStackParamList, 'forum'>;
-};
-
-const ForumScreen = ({ navigation }: ForumScreenProps) => {  
+export default function ForumScreen(){
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.text}>Forum Screen</Text>
         <Text>Under Construction</Text>
       </View>
-      <BottomNavigation navigation={navigation} />
     </View>
   );
 };
@@ -37,5 +28,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-export default ForumScreen;

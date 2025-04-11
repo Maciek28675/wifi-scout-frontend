@@ -13,16 +13,8 @@ import {
   Feather 
 } from '@expo/vector-icons';
 import styles from '../styles/homeStyles';
-import BottomNavigation from '../components/bottomNavBar';
-import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../navigation/MainNavigator';
 
-type HomeScreenProps = {
-  navigation: NavigationProp<RootStackParamList>;
-  route: RouteProp<RootStackParamList, 'home'>;
-};
-
-const HomeScreen = ({ navigation }: HomeScreenProps) => {  
+export default function HomeScreen(){
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -116,11 +108,6 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
           </View>
         </View>
       </ScrollView>
-      
-      {/* Bottom navigation component */}
-      <BottomNavigation navigation={navigation} />
     </SafeAreaView>
   );
 }
-
-export default HomeScreen;
