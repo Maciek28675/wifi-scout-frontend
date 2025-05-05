@@ -1,8 +1,9 @@
 import { Tabs } from 'expo-router';
 import { Colors } from '@/constants/Colors'
 import { LinearGradient } from "expo-linear-gradient";
-import { HomeIcon } from 'react-native-heroicons/outline'
+import { HomeIcon, UserIcon, UserGroupIcon } from 'react-native-heroicons/outline'
 import { HomeIcon as HomeIconSolid } from 'react-native-heroicons/solid'
+import { UserGroupIcon as UserGroupIconSolid} from "react-native-heroicons/solid";
 
 
 export default function TabLayout() {
@@ -36,7 +37,16 @@ export default function TabLayout() {
                     )
             }}/>
             <Tabs.Screen name="map"/>
-            <Tabs.Screen name="forum"/>
+            <Tabs.Screen name="forum" options={{
+                title: 'Forum',
+                headerShown: false,
+                tabBarIcon: ({color, focused}) => 
+                    focused ? (
+                        <UserGroupIconSolid color={color} size={24}/>
+                    ) : (
+                        <UserGroupIcon color={color} size={24}/>
+                    )
+            }}/>
             <Tabs.Screen name="settings"/>
         </Tabs>
     )
