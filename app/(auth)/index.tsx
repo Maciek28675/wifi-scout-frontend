@@ -36,12 +36,12 @@ export default function Index() {
     Animated.sequence([
       Animated.timing(nokiaFadeAnim, {
         toValue: 1,         
-        duration: 1000,      
+        duration: 500,      
         useNativeDriver: true,
       }),
       Animated.timing(pwrFadeAnim, {
         toValue: 1,         
-        duration: 1000,      
+        duration: 500,      
         useNativeDriver: true,
       })
     ]).start();

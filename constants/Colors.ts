@@ -5,7 +5,9 @@ export const Colors = {
 
         textPrimary: '#FFFFFF',
 
-        backgroundPrimary: '#FFFFFF'
+        backgroundPrimary: '#FFFFFF',
+
+        navbarBorder: '#0F608D'
     },
 
     dark: {
