@@ -49,8 +49,9 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     labelText: {
-        fontSize: 14,
-        color: '#B2B2B2'
+        fontSize: 13,
+        color: '#B2B2B2',
+        textAlign: 'center'
     }
 })
 

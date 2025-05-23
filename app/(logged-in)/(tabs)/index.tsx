@@ -1,54 +1,66 @@
-import { Colors } from "@/constants/Colors";
-import ConnectionTutorial from "@/components/ConnectionTutorial"
-import NetworkInfo from "@/components/NetworkInfo";
 import { useState, useRef } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Linking, Platform, Animated} from "react-native";
+import Toast from 'react-native-toast-message';
+
+import { Colors } from "@/constants/Colors";
+
+import ConnectionTutorial from "@/components/ConnectionTutorial"
+import NetworkInfo from "@/components/NetworkInfo";
+
+import testDownload from "@/utils/testDownload";
+import testUpload from "@/utils/testUpload";
+import testPing from "@/utils/testPing";
 
  export default function Home() {
+    // State declarations
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+
     const [downloadSpeed, setDownloadSpeed] = useState<number>(0);
+    const [uploadSpeed, setUploadSpeed] = useState<number>(0);
     const [ping, setPing] = useState<number>(0);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const testDownload = async (file_size_mb: Number) => {
-        setIsLoading(true)
-        const url = `http://192.168.1.3:8000/speedtest/download/${file_size_mb}`
-        
-        // Start timer
-        const startTime = performance.now();
+    const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
+    const [isUploadLoading, setIsUploadLoading] = useState<boolean>(false);
+    const [isPingLoading, setIsPingLoading] = useState<boolean>(false);
 
-        const response = await fetch(url);
-        const data = await response.arrayBuffer();
-        const endTime = performance.now();
+    const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
 
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-        
-        const bytesReceived = data.byteLength;
-        const durationSeconds = (endTime - startTime) / 1000;
+    // Animation scale declarations
+    const scaleInfo = useRef(new Animated.Value(1)).current;
+    const scaleConnect = useRef(new Animated.Value(1)).current;
+    const scaleScan = useRef(new Animated.Value(1)).current;
 
-        const speedBps = bytesReceived / durationSeconds;
-        const speedMbps = (speedBps * 8) / (1024 * 1024);
 
-        setIsLoading(false)
-        setDownloadSpeed(Math.round(speedMbps));
-    }
-    
-    const testPing = async () => {
-        const url = "http://192.168.1.3:8000/speedtest/ping";
+    const testNetworkParameters = async () => {
+        console.log(process.env.EXPO_PUBLIC_SPEED_TEST_API_BASE)
+        setIsTestLoading(true)
 
-        const startTime = performance.now();
-        const response = await fetch(url);
-        const endTime = performance.now();
+        // Download
+        setIsDownloadLoading(true)
+        const download = await testDownload(10, 5)
+        setIsDownloadLoading(false)
+        setDownloadSpeed(download)
 
-         if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
+        // Upload
+        setIsUploadLoading(true)
+        const upload = await testUpload(10, 5)
+        setIsUploadLoading(false)
+        setUploadSpeed(upload)
 
-        const duration = endTime - startTime;
+        // Ping
+        setIsPingLoading(true)
+        const ping = await testPing(10)
+        setIsPingLoading(false)
+        setPing(ping)
 
-        setPing(duration);
+        setIsTestLoading(false)
+
+        Toast.show({
+            type: "success",
+            text1: "Test sieci zakończony!",
+            text2: `Download: ${download} | Mbps Upload: ${upload} Mbps | Ping: ${ping} ms`
+
+        })
     }
 
     const openSettings = async () => {
@@ -70,10 +82,6 @@ import { View, Text, StyleSheet, SafeAreaView, Pressable, Linking, Platform, Ani
           console.error('Error opening settings:', error);
         }
       };
-
-      const scaleInfo = useRef(new Animated.Value(1)).current;
-      const scaleConnect = useRef(new Animated.Value(1)).current;
-      const scaleScan = useRef(new Animated.Value(1)).current;
 
       const onPressIn = (scaleValue: Animated.Value) => {
         Animated.spring(scaleValue, {
@@ -103,9 +111,9 @@ import { View, Text, StyleSheet, SafeAreaView, Pressable, Linking, Platform, Ani
                 <Text style={styles.headerText}>WiFi Scout</Text>
             </View>
             <View style={styles.networkDataContainer}>
-                <NetworkInfo data={downloadSpeed} label="Pobieranie" color="#67B22D" loading={isLoading}/>
-                <NetworkInfo data={221} label="Wysyłanie" color="#B22D2D" loading={isLoading}/>
-                <NetworkInfo data={ping} label="Opóźnienie" color="#E4A316" loading={isLoading}/>
+                <NetworkInfo data={downloadSpeed} label="Pobieranie (Mbps)" color="#67B22D" loading={isDownloadLoading}/>
+                <NetworkInfo data={uploadSpeed} label="Wysyłanie (Mbps)" color="#B22D2D" loading={isUploadLoading}/>
+                <NetworkInfo data={ping} label="Opóźnienie (ms)" color="#E4A316" loading={isPingLoading}/>
             </View>
             <View style={styles.networkInfoContainer}>
                 <Pressable style={[styles.netInfoButtonContainer, {marginLeft: 16}]} onPressIn={() => onPressIn(scaleInfo)} onPressOut={() => onPressOut(scaleInfo)}>
@@ -126,13 +134,24 @@ import { View, Text, StyleSheet, SafeAreaView, Pressable, Linking, Platform, Ani
 
             </View>
             <View style={styles.actionButtonsContainer}>
-                <Pressable style={styles.quickScanButtonContainer} onPress={() => testDownload(10)} onPressIn={() => onPressIn(scaleScan)} onPressOut={() => onPressOut(scaleScan)}>
+                <Pressable 
+                    style={styles.quickScanButtonContainer} 
+                    onPress={testNetworkParameters} 
+                    onPressIn={() => onPressIn(scaleScan)} 
+                    onPressOut={() => onPressOut(scaleScan)}
+                    disabled={isTestLoading}
+                >
                     <Animated.View style={[styles.buttonAnimationWrapper, {transform: [{scale: scaleScan}]}]}>
-                        <Text style={styles.quickScanButtonText}>Szybki Skan</Text>
+                        {isTestLoading ? (
+                            <Text style={styles.quickScanButtonText}>W trakcie...</Text>
+                        ): (
+                            <Text style={styles.quickScanButtonText}>Szybki Skan</Text>
+                        )}
                     </Animated.View>
                 </Pressable>
             </View>
             <ConnectionTutorial isVisible={modalVisible} onClose={closeModal}/>
+            <Toast/>
         </SafeAreaView>
     )
  }

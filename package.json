@@ -15,6 +15,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo/config-plugins": "~10.0.0",
     "@expo/vector-icons": "^14.1.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
@@ -23,9 +24,11 @@
     "expo-blur": "~14.1.4",
     "expo-checkbox": "~4.1.4",
     "expo-constants": "~17.1.5",
+    "expo-crypto": "~14.1.4",
     "expo-font": "~13.3.1",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.1.6",
+    "expo-linear-gradient": "~14.1.4",
     "expo-linking": "~7.1.4",
     "expo-router": "~5.0.5",
     "expo-splash-screen": "~0.30.8",
@@ -38,14 +41,13 @@
     "react-native": "0.79.2",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-heroicons": "^4.0.0",
+    "react-native-maps": "1.20.1",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
+    "react-native-toast-message": "^2.3.0",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5",
-    "@expo/config-plugins": "~10.0.0",
-    "expo-linear-gradient": "~14.1.4",
-    "react-native-maps": "1.20.1"
+    "react-native-webview": "13.13.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
