@@ -1,19 +1,33 @@
-import { useState, useRef } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Pressable, Linking, Platform, Animated} from "react-native";
+// External
+import { useState, useRef, useEffect } from "react";
+import { View, Text, StyleSheet, SafeAreaView, Linking, Platform, Animated} from "react-native";
 import Toast from 'react-native-toast-message';
+import {useNetworkState} from 'expo-network'
+import * as Haptics from 'expo-haptics'
+import * as Location from 'expo-location';
 
+// Constants
 import { Colors } from "@/constants/Colors";
 
+// Internal components
 import ConnectionTutorial from "@/components/ConnectionTutorial"
 import NetworkInfo from "@/components/NetworkInfo";
+import AnimatedButton from "@/components/AnimatedButton";
+import MessageModal from "@/components/MessageModal";
 
+// Utility functions
 import testDownload from "@/utils/testDownload";
 import testUpload from "@/utils/testUpload";
 import testPing from "@/utils/testPing";
 
+
  export default function Home() {
+
+    const networkState = useNetworkState();
+
     // State declarations
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [messageVisible, setMessageVisible] = useState<boolean>(false);
 
     const [downloadSpeed, setDownloadSpeed] = useState<number>(0);
     const [uploadSpeed, setUploadSpeed] = useState<number>(0);
@@ -22,6 +36,9 @@ import testPing from "@/utils/testPing";
     const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
     const [isUploadLoading, setIsUploadLoading] = useState<boolean>(false);
     const [isPingLoading, setIsPingLoading] = useState<boolean>(false);
+    
+    const [isEduroamConnected, setIsEduroamConnected] = useState<boolean>(false);
+    const [currentIP, setCurrentIP] = useState<string>("")
 
     const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
 
@@ -30,6 +47,12 @@ import testPing from "@/utils/testPing";
     const scaleConnect = useRef(new Animated.Value(1)).current;
     const scaleScan = useRef(new Animated.Value(1)).current;
 
+    useEffect(() => {
+        (async () => {
+            const {status} = await Location.requestBackgroundPermissionsAsync();
+            return;
+        }) ();
+    }, [])
 
     const testNetworkParameters = async () => {
         console.log(process.env.EXPO_PUBLIC_SPEED_TEST_API_BASE)
@@ -105,51 +128,54 @@ import testPing from "@/utils/testPing";
         setModalVisible(false)
       }
 
+      const openMessage = () => {
+        setMessageVisible(true)
+      }
+
+      const closeMessage = () => {
+        setMessageVisible(false)
+      }
+
     return (
         <SafeAreaView style={styles.container}>
+
             <View style={styles.headerWrapper}>
                 <Text style={styles.headerText}>WiFi Scout</Text>
             </View>
-            <View style={styles.networkDataContainer}>
-                <NetworkInfo data={downloadSpeed} label="Pobieranie (Mbps)" color="#67B22D" loading={isDownloadLoading}/>
-                <NetworkInfo data={uploadSpeed} label="Wysyłanie (Mbps)" color="#B22D2D" loading={isUploadLoading}/>
-                <NetworkInfo data={ping} label="Opóźnienie (ms)" color="#E4A316" loading={isPingLoading}/>
+
+            <View style={styles.speedTestResultContainer}>
+                <NetworkInfo data={downloadSpeed} label="Pobieranie (Mbps)" color={Colors.light.gradientRight} loading={isDownloadLoading}/>
+                <NetworkInfo data={uploadSpeed} label="Wysyłanie (Mbps)" color={Colors.light.gradientRight} loading={isUploadLoading}/>
+                <NetworkInfo data={ping} label="Opóźnienie (ms)" color={Colors.light.gradientRight} loading={isPingLoading}/>
             </View>
-            <View style={styles.networkInfoContainer}>
-                <Pressable style={[styles.netInfoButtonContainer, {marginLeft: 16}]} onPressIn={() => onPressIn(scaleInfo)} onPressOut={() => onPressOut(scaleInfo)}>
-                    <Animated.View style={[styles.buttonAnimationWrapper, {transform: [{scale: scaleInfo}]}]}>
-                        <Text style={styles.netinfoButtonText}>Nazwa Sieci</Text>
-                    </Animated.View>
-                </Pressable>
-                <Pressable style={[styles.connectButtonContainer, {marginRight: 16}]} onPress={openModal} onPressIn={() => onPressIn(scaleConnect)} onPressOut={() => onPressOut(scaleConnect)}>
-                    <Animated.View style={[styles.buttonAnimationWrapper, {transform: [{scale: scaleConnect}]}]}>
-                        <Text style={styles.connectButtonText}>Połącz się</Text>
-                    </Animated.View>
-                </Pressable>
+
+            <View style={styles.networkInfoButtonsContainer}>
+                <AnimatedButton scale={scaleInfo} onPress={openMessage} buttonStyles={styles.wifiNameButtonContainer}>
+                    <Text style={styles.wifiNameButtonText}>Nie połączono</Text>
+                </AnimatedButton>
+                <AnimatedButton scale={scaleConnect} onPress={openModal} buttonStyles={styles.connectButtonContainer}>
+                    <Text style={styles.connectButtonText}>Połącz się</Text>
+                </AnimatedButton>
             </View>
+
             <View style={styles.lastActivitiesHeaderContainer}>
                 <Text style={styles.lastActivitiesHeaderText}>Ostatnie Aktywności</Text>
             </View>
+
             <View style={styles.lastActivitiesContainer}>
 
             </View>
+
             <View style={styles.actionButtonsContainer}>
-                <Pressable 
-                    style={styles.quickScanButtonContainer} 
-                    onPress={testNetworkParameters} 
-                    onPressIn={() => onPressIn(scaleScan)} 
-                    onPressOut={() => onPressOut(scaleScan)}
-                    disabled={isTestLoading}
-                >
-                    <Animated.View style={[styles.buttonAnimationWrapper, {transform: [{scale: scaleScan}]}]}>
-                        {isTestLoading ? (
+                <AnimatedButton scale={scaleScan} onPress={testNetworkParameters} disabled={isTestLoading} buttonStyles={styles.quickScanButtonContainer}>
+                    {isTestLoading ? (
                             <Text style={styles.quickScanButtonText}>W trakcie...</Text>
                         ): (
                             <Text style={styles.quickScanButtonText}>Szybki Skan</Text>
-                        )}
-                    </Animated.View>
-                </Pressable>
+                    )}
+                </AnimatedButton>
             </View>
+            <MessageModal isVisible={messageVisible} onClose={closeMessage} messageType="warning"/>
             <ConnectionTutorial isVisible={modalVisible} onClose={closeModal}/>
             <Toast/>
         </SafeAreaView>
@@ -159,8 +185,6 @@ import testPing from "@/utils/testPing";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //alignItems: 'center',
-        //justifyContent: 'center',
         backgroundColor: '#F5F5F5'
     },
 
@@ -174,48 +198,60 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         lineHeight: 28
     },
-    networkDataContainer: {
+
+    speedTestResultContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         marginHorizontal: 16,
         gap: 16,
         marginBottom: 24
     },
-    networkInfoContainer: {
+
+    networkInfoButtonsContainer: {
         alignItems: 'center',
-        //justifyContent: 'space-between',
         flexDirection: 'row',
-        gap: 16
+        gap: 16,
+        marginHorizontal: 16
     },
     connectButtonContainer: {
-        flex: 1/2,
         backgroundColor: Colors.light.gradientLeft,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 16,
+        flex: 1/2,
         borderRadius: 12,
-        borderCurve: 'circular',
-        //margin: 16
+        borderCurve: 'continuous',
+        paddingVertical: 16,
+        shadowColor: '#0e588c',
+        shadowOpacity: 0.4,
+        shadowRadius: 12,
+        shadowOffset: {
+            width: 0,
+            height: 4
+        },
+        elevation: 2,
     },
-    netInfoButtonContainer: {
+    wifiNameButtonContainer: {
         flex: 1/2,
         backgroundColor: "#FFF",
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 16,
         borderRadius: 12,
-        borderCurve: 'circular',
-        //margin: 16
+        borderCurve: 'continuous',
+        paddingVertical: 16,
+        shadowColor: '#000000',
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        shadowOffset: {
+            width: 0,
+            height: 4
+        },
+        elevation: 2,
     },
     connectButtonText: {
         color: "#FFF",
         fontSize: 16,
-        fontWeight: 'bold'
+        fontWeight: '600'
     },
-    netinfoButtonText: {
-        color: Colors.light.gradientLeft,
+    wifiNameButtonText: {
+        color: "#B22D2D",
         fontSize: 16,
-        fontWeight: 'bold'
+        fontWeight: '600'
     },
     
     actionButtonsContainer: {
@@ -229,30 +265,39 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         paddingHorizontal: 32,
         borderRadius: 12,
-        margin: 16,
-        borderCurve: 'circular',
-        //margin: 16
+        marginBottom: 32,
+        borderCurve: 'continuous',
+         shadowColor: '#0e588c',
+        shadowOpacity: 0.4,
+        shadowRadius: 12,
+        shadowOffset: {
+            width: 0,
+            height: 3
+        },
+        elevation: 2,
     },
+
     quickScanButtonText: {
         color: "#FFF",
         fontSize: 16,
         fontWeight: 'bold'
     },
-    speedTestContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-    },
-    buttonAnimationWrapper: {
 
-    },
     lastActivitiesContainer: {
         borderRadius: 12,
-        borderCurve: 'circular',
+        borderCurve: 'continuous',
         backgroundColor: '#FFF',
         marginHorizontal: 16,
         marginBottom: 32,
-        flex: 1
+        flex: 1,
+        shadowColor: '#000000',
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        shadowOffset: {
+            width: 0,
+            height: 4
+        },
+        elevation: 2,
     },
     lastActivitiesHeaderContainer: {
         alignItems: 'flex-start',

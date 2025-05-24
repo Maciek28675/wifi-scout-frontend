@@ -29,7 +29,7 @@ const NetworkInfo: React.FC<props> = ({data, label, color, loading}) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFF",
-        borderCurve: 'circular',
+        borderCurve: 'continuous',
         borderRadius: 12,
         alignItems: 'center',
         justifyContent: 'center',
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
             width: 0,
             height: 4
         },
+        elevation: 2,
         paddingVertical: 16,
         gap: 8
     },
