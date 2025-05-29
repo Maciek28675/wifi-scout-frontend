@@ -21,6 +21,14 @@ import testUpload from "@/utils/testUpload";
 import testPing from "@/utils/testPing";
 
 
+interface Measurement {
+    latitude: number,
+    longitude: number,
+    height?: number | null,
+    download_speed: number,
+    upload_speed: number,
+    ping: number
+}
  export default function Home() {
 
     const networkState = useNetworkState();
@@ -84,6 +92,33 @@ import testPing from "@/utils/testPing";
             text2: `Download: ${download} | Mbps Upload: ${upload} Mbps | Ping: ${ping} ms`
 
         })
+        
+        console.log(`Download: ${download} Upload: ${upload} Ping: ${ping}`)
+        // Send result to backend
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        const coordinates = currentLocation.coords
+
+        const requestBody: Measurement = {
+            latitude: coordinates.latitude,
+            longitude: coordinates.longitude,
+            height: coordinates.altitude,
+            download_speed: download,
+            upload_speed: upload,
+            ping: ping
+        }
+
+        const url = `${process.env.EXPO_PUBLIC_BACKEND_API_BASE}/measurements/`
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        })
+
+        const result = await response.json()
+        console.log(result)
+    
     }
 
     const openSettings = async () => {
