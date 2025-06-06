@@ -50,7 +50,7 @@ const ConnectionTutorial: React.FC<Props> = ({ isVisible = false, onClose }) => 
                     <View style={styles.modalHeader}>
                         <Text style={styles.moadlHeaderText}>Jak się połączyć?</Text>
                         <Pressable onPress={onClose}>
-                        <XCircleIcon size={40} color={Colors.light.gradientLeft} />
+                        <XCircleIcon size={48} color={Colors.light.gradientLeft} />
                         </Pressable>
                     </View>
                     <ScrollView style={styles.modalListContainer}>

@@ -1,20 +1,28 @@
-import {Modal, View, Text, StyleSheet, Pressable} from 'react-native'
+import {Modal, View, Text, StyleSheet, Pressable, Animated} from 'react-native'
+import { useRef } from 'react';
 import {ExclamationTriangleIcon, InformationCircleIcon, XCircleIcon, CheckCircleIcon} from 'react-native-heroicons/outline'
 import { Colors } from '@/constants/Colors';
+import AnimatedButton from './AnimatedButton';
 
 interface props {
     messageType: 'success' | 'warning' | 'info' | 'error',
+    headerText: string,
+    mainText: string,
+    secondaryText? : string,
     isVisible: boolean,
     onClose: () => void
 }
 
-const MessageModal: React.FC<props> = ({messageType, isVisible, onClose}) => {
+const MessageModal: React.FC<props> = ({messageType, headerText, mainText, secondaryText, isVisible, onClose}) => {
+
+    const scaleUnderstood = useRef(new Animated.Value(1)).current;
+  
 
     const indicator: {[key: string]: React.JSX.Element} = {
-        'success': <CheckCircleIcon size={32}/>,
-        'warning': <ExclamationTriangleIcon size={32} color='#E88923'/>,
-        'info': <InformationCircleIcon size={32}/>,
-        'error': <XCircleIcon size={32}/>
+        'success': <CheckCircleIcon size={32} color={Colors.light.indicatorGood}/>,
+        'warning': <ExclamationTriangleIcon size={32} color={Colors.light.indicatorMid}/>,
+        'info': <InformationCircleIcon size={32} color={Colors.light.gradientLeft}/>,
+        'error': <XCircleIcon size={32} color={Colors.light.indicatorBad}/>
     }
 
     return (
@@ -23,23 +31,16 @@ const MessageModal: React.FC<props> = ({messageType, isVisible, onClose}) => {
                 <View style={styles.modalContent}>
                     <View style={styles.modalHeaderContainer}>
                         {indicator[messageType]}
-                        <Text style={styles.modalTitle}>Nie połączono z Eduroam</Text>
+                        <Text style={styles.modalTitle}>{headerText}</Text>
                     </View>
                     <View style={styles.modalMainContainer}>
-                        <Text style={styles.modalMainText}>
-                            Aktualny adres ip <Text style={[styles.modalMainText, {color: "#E88923"}]}>192.168.1.4 </Text> 
-                            nie należy do sieci Eduroam, co uniemożliwia wykonanie
-                            testu jakości połączenia.
-                        </Text>
-                        <Text style={styles.modalMainText}>
-                             Sprawdź jak się połączyć klikając przycisk 
-                             <Text style={[styles.modalMainText, {color: Colors.light.gradientLeft}]}> Połącz się </Text> na ekranie głównym.
-                        </Text>
+                        <Text style={styles.modalMainText}>{mainText}</Text>
+                        <Text style={styles.modalMainText}>{secondaryText}</Text>
                     </View>
                     <View style={styles.modalFooterContainer}>
-                        <Pressable onPress={onClose} style={styles.modalFooterButton}>
+                        <AnimatedButton onPress={onClose} scale={scaleUnderstood} buttonStyles={styles.modalFooterButton}>
                             <Text style={styles.modalFooterButtonText}>Rozumiem</Text>
-                        </Pressable>
+                        </AnimatedButton>
                     </View>
                 </View>
             </View>
@@ -48,7 +49,7 @@ const MessageModal: React.FC<props> = ({messageType, isVisible, onClose}) => {
 }
 
 const styles = StyleSheet.create({
-    modalContainer: {
+  modalContainer: {
         backgroundColor: '#00000080',
         alignItems: 'center',
         justifyContent: 'center',
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     gap: 8,
     flexDirection: 'row',
-    marginLeft: 16
+    marginHorizontal: 16
   },
   modalTitle: {
     fontSize: 16,

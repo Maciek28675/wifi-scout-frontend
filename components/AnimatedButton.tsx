@@ -26,6 +26,8 @@ const AnimatedButton: React.FC<props> = ({scale, onPress, buttonStyles, children
         }).start();
     }
 
+    const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+    
     return (
         <Animated.View style={[styles.animationWrapper, buttonStyles, {transform: [{scale}]} ]}>
             <Pressable 

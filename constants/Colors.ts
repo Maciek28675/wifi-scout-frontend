@@ -7,7 +7,11 @@ export const Colors = {
 
         backgroundPrimary: '#FFFFFF',
 
-        navbarBorder: '#0F608D'
+        navbarBorder: '#0F608D',
+
+        indicatorBad: '#B22D2D',
+        indicatorMid: '#E4A316',
+        indicatorGood: '#67B22D'
     },
 
     dark: {
