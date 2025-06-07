@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
   modalContent: {
     borderRadius: 18,
     borderCurve: 'continuous',
-    width: 'auto',
     backgroundColor: '#FFF',
+    alignSelf: 'stretch',
     marginHorizontal: 16 
   },
   modalHeaderContainer: {
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 16,
     marginVertical: 16,
-    gap: 8
+    gap: 8,
   },
   modalMainText: {
     fontSize: 13,

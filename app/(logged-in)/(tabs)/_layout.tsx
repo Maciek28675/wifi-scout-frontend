@@ -1,5 +1,5 @@
-import { View, Platform } from 'react-native';
-import { Tabs } from 'expo-router';
+import { View, Platform, Pressable } from 'react-native';
+import { router, Tabs } from 'expo-router';
 import { Colors } from '@/constants/Colors'
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -47,7 +47,8 @@ export default function TabLayout() {
                     ) : (
                         <HomeIcon color={color} size={24}/>
                     ),
-                tabBarStyle: {height: 75}
+                tabBarStyle: {height: 75},
+                
             }}/>
             <Tabs.Screen name="map" options={{
                 title: 'Map',
@@ -58,8 +59,7 @@ export default function TabLayout() {
                     ) : (
                         <MapIcon color={color} size={24}/>
                     ),
-                tabBarStyle: {height: 75}
-
+                tabBarStyle: {height: 75},
             }}/>
             <Tabs.Screen name="forum" options={{
                 title: 'Forum',

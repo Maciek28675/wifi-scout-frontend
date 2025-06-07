@@ -101,12 +101,12 @@ export default function Home() {
                     wasIPWarningShown.current = true
                 }
             }
-
+            
         }, 5000);
 
         return () => clearInterval(interval);
     }, []);
-
+    
     // Get activities on first render
     useEffect(() => {
         (async () => {
@@ -120,149 +120,159 @@ export default function Home() {
     }, [])
 
     Network.addNetworkStateListener(({type}) => {
-        const previousNetworkType = networkType.current
-
-        if(previousNetworkType === Network.NetworkStateType.WIFI && type === Network.NetworkStateType.CELLULAR) {
+        console.log(type)
+        if(type !== Network.NetworkStateType.WIFI) {
             openMessage();
         }
-
+        
         networkType.current = type;
     });
 
-    const testNetworkParameters = async () => {
-
-        isTestRefreshed.current = false;
-
-        const { status} = await Location.getForegroundPermissionsAsync();
-
-        if (status !== Location.PermissionStatus.GRANTED) {
-            const { status: newStatus } = await Location.requestForegroundPermissionsAsync();
-
-            if (newStatus !== Location.PermissionStatus.GRANTED) {
-                alert("You need to allow location permissions");
-                return;
-            }
-        }
-
-        const ip = await Network.getIpAddressAsync()
-
-        if(isTestRefreshed.current) return;
-
-        setIsTestLoading(true)
-
-        // Download
-        setIsDownloadLoading(true)
-        console.log(`download started (Device ${ip})`)
-        const download = await testDownload(1, 5)
-        setIsDownloadLoading(false)
-        if(isTestRefreshed.current) return;
-        setDownloadSpeed(download)
-
-        // Upload
-        setIsUploadLoading(true)
-        console.log(`upload started (Device ${ip})`)
-        const upload = await testUpload(1, 5)
-        setIsUploadLoading(false)
-        if(isTestRefreshed.current) return;
-        setUploadSpeed(upload)
-
-        // Ping
-        setIsPingLoading(true)
-        console.log(`ping started (Device ${ip})`)
-        const ping = await testPing(10)
-        setIsPingLoading(false)
-        if(isTestRefreshed.current) return;
-        setPing(ping)
-
-        setIsTestLoading(false)
-
-        console.log(`Test result (Device: ${ip}) Download: ${download} Upload: ${upload} Ping: ${ping}`)
-
-        if(isTestRefreshed.current) return;
-
-        // Send result to backend
-        let currentLocation = await Location.getCurrentPositionAsync({});
-        const coordinates = currentLocation.coords
-
-        const requestBody: Measurement = {
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude,
-            height: coordinates.altitude,
-            download_speed: download,
-            upload_speed: upload,
-            ping: ping
-        }
-
-        const url = `${process.env.EXPO_PUBLIC_BACKEND_API_BASE}/measurements/`
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestBody)
-        })
-
-        if(response.ok) {
-            Toast.show({
-                type: "success",
-                text1: "Test sieci zakończony!",
-                text2: "wynik widoczny na mapie i w aktywności"
-            })
-        }
-
-        const result = await response.json()
-        const newActivity: Activity = {
-            latitude: result.latitude,
-            longitude: result.longitude,
-            height: result.height,
-            download_speed: download,
-            upload_speed: upload,
-            ping: ping,
-            color: Colors.light.indicatorGood,
-            building: 'Kampus Grunwaldzki', // TODO: Add fetch for building name based on localization,
-            timestamp: result.timestamp
-        }
-
-        addActivity(newActivity)
-
-        const activities = await getActivities();
-        const sortedActivities = activities.sort(
-            (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-        );
-
-        setActivities(sortedActivities)
-
-        console.log(`Backend response: ${JSON.stringify(result)}`)
-    }
-
     // Modal related methods
-    const openModal = () => {
+    const openModal = async () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
         setModalVisible(true)
     }
 
     const closeModal = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
         setModalVisible(false)
     }
 
     const openMessage = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
         setMessageVisible(true)
     }
 
     const closeMessage = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
         setMessageVisible(false)
     }
 
-    const openActivityDetails = () => {
-        setActivityDetailsVisible(true)
-    }
+    const testNetworkParameters = async () => {
 
-    const closeActivityDetails = () => {
-        setActivityDetailsVisible(false)
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+
+        if (!isEduroamConnected || networkState.type !== Network.NetworkStateType.WIFI) {
+            Toast.show({
+                type: 'error',
+                text1: 'Nie można wykonać testu!',
+                text2: 'Brak połączenia z Eduroam.'
+            })
+        }
+        else {
+            isTestRefreshed.current = false;
+
+            const { status} = await Location.getForegroundPermissionsAsync();
+
+            if (status !== Location.PermissionStatus.GRANTED) {
+                const { status: newStatus } = await Location.requestForegroundPermissionsAsync();
+
+                if (newStatus !== Location.PermissionStatus.GRANTED) {
+                    alert("You need to allow location permissions");
+                    return;
+                }
+            }
+
+            const ip = await Network.getIpAddressAsync()
+
+            if(isTestRefreshed.current) return;
+
+            setIsTestLoading(true)
+
+            // Download
+            setIsDownloadLoading(true)
+            console.log(`download started (Device ${ip})`)
+            const download = await testDownload(1, 5)
+            setIsDownloadLoading(false)
+            if(isTestRefreshed.current) return;
+            setDownloadSpeed(download)
+
+            // Upload
+            setIsUploadLoading(true)
+            console.log(`upload started (Device ${ip})`)
+            const upload = await testUpload(1, 5)
+            setIsUploadLoading(false)
+            if(isTestRefreshed.current) return;
+            setUploadSpeed(upload)
+
+            // Ping
+            setIsPingLoading(true)
+            console.log(`ping started (Device ${ip})`)
+            const ping = await testPing(10)
+            setIsPingLoading(false)
+            if(isTestRefreshed.current) return;
+            setPing(ping)
+
+            setIsTestLoading(false)
+
+            console.log(`Test result (Device: ${ip}) Download: ${download} Upload: ${upload} Ping: ${ping}`)
+
+            if(isTestRefreshed.current) return;
+
+            // Send result to backend
+            let currentLocation = await Location.getCurrentPositionAsync({});
+            const coordinates = currentLocation.coords
+
+            const requestBody: Measurement = {
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude,
+                height: coordinates.altitude,
+                download_speed: download,
+                upload_speed: upload,
+                ping: ping
+            }
+
+            const url = `${process.env.EXPO_PUBLIC_BACKEND_API_BASE}/measurements/`
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            })
+
+            if(response.ok) {
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+
+                Toast.show({
+                    type: "success",
+                    text1: "Test sieci zakończony!",
+                    text2: "wynik widoczny na mapie i w aktywności"
+                })
+            }
+
+            const result = await response.json()
+            const newActivity: Activity = {
+                latitude: result.latitude,
+                longitude: result.longitude,
+                height: result.height,
+                download_speed: download,
+                upload_speed: upload,
+                ping: ping,
+                color: Colors.light.indicatorGood,
+                building: 'Kampus Grunwaldzki', // TODO: Add fetch for building name based on localization,
+                timestamp: result.timestamp
+            }
+
+            addActivity(newActivity)
+
+            const activities = await getActivities();
+            const sortedActivities = activities.sort(
+                (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+            );
+
+            setActivities(sortedActivities)
+
+            console.log(`Backend response: ${JSON.stringify(result)}`)
+        }
     }
 
     // TODO: Fix refresh. Add abort to fetch calls
     const onRefreshClick = () => {
+
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
 
         if (!isTestLoading){
             Toast.show({
@@ -314,7 +324,7 @@ export default function Home() {
                         style={[ styles.wifiNameButtonText,
                             {
                             color:
-                                networkState.type === Network.NetworkStateType.CELLULAR
+                                networkState.type !== Network.NetworkStateType.WIFI
                                     ? Colors.light.indicatorBad
                                     : isEduroamConnected && networkState.type === Network.NetworkStateType.WIFI
                                     ? Colors.light.indicatorInfo
@@ -376,13 +386,13 @@ export default function Home() {
                     secondaryText={`Aktualne ip: ${currentIP}`}
                 /> }
             
-            <MessageModal
+            { networkState.type !== Network.NetworkStateType.WIFI && <MessageModal
                 isVisible={messageVisible}
                 onClose={closeMessage}
                 messageType="error"
                 headerText="Rozłączono z WiFi"
                 mainText="Aplikacja wymaga połączenia z WiFi do pełnego działania. Kliknij 'Połącz się' na ekranie głównym żeby zobaczyć instrukcję."
-            />
+            /> }
             <ConnectionTutorial isVisible={modalVisible} onClose={closeModal}/>
             <Toast/>
         </SafeAreaView>

@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     marginHorizontal: 16,
-    marginVertical: 16,
+    marginTop: 16,
     gap: 8
   },
   modalMainText: {

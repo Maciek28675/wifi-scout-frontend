@@ -10,6 +10,8 @@ interface props {
     children?: React.ReactNode,
 }
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 const AnimatedButton: React.FC<props> = ({scale, onPress, buttonStyles, children, disabled}) => {
 
     const onPressIn = (scaleValue: Animated.Value) => {
@@ -26,20 +28,17 @@ const AnimatedButton: React.FC<props> = ({scale, onPress, buttonStyles, children
         }).start();
     }
 
-    const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
     
     return (
-        <Animated.View style={[styles.animationWrapper, buttonStyles, {transform: [{scale}]} ]}>
-            <Pressable 
+            <AnimatedPressable 
                 onPressIn={() => onPressIn(scale)} 
                 onPressOut={() => onPressOut(scale)}
                 onPress={onPress}
-                style={[styles.container]}
+                style={[buttonStyles, styles.container, {transform: [{ scale }],}]}
                 disabled={disabled}
             >
                 {children}
-            </Pressable>
-        </Animated.View>
+            </AnimatedPressable>
     )
 }
 
@@ -51,7 +50,6 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%',
     }
 })
 
