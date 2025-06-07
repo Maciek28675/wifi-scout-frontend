@@ -16,6 +16,7 @@ import ConnectionTutorial from "@/components/ConnectionTutorial"
 import NetworkInfo from "@/components/NetworkInfo";
 import AnimatedButton from "@/components/AnimatedButton";
 import MessageModal from "@/components/MessageModal";
+import MessageModalChildren from "@/components/MessageModalChildren";
 import ActivitySummary from "@/components/ActivitySummary"
 
 // Utility functions
@@ -35,14 +36,13 @@ interface Measurement {
 
 export default function Home() {
 
-    const isTestRefreshed = useRef(false);
-
     // Listen for network related changes
     const networkState = useNetworkState();
 
     // State declarations
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [messageVisible, setMessageVisible] = useState<boolean>(false);
+    const [actvityDetailsVisible, setActivityDetailsVisible] = useState<boolean>(false)
 
     const [downloadSpeed, setDownloadSpeed] = useState<number>(0);
     const [uploadSpeed, setUploadSpeed] = useState<number>(0);
@@ -54,6 +54,7 @@ export default function Home() {
     
     const [isEduroamConnected, setIsEduroamConnected] = useState<boolean>(false);
     const [currentIP, setCurrentIP] = useState<string>("")
+    const [networkInfo, setNetworkInfo] = useState<string>("")
 
     const [isTestLoading, setIsTestLoading] = useState<boolean>(false);
 
@@ -66,6 +67,10 @@ export default function Home() {
     const scaleScan = useRef(new Animated.Value(1)).current;
     const scaleRefresh = useRef(new Animated.Value(1)).current;
 
+    // Refs
+    const isTestRefreshed = useRef(false);
+    const wasIPWarningShown = useRef(false);
+    const networkType = useRef<Network.NetworkStateType | undefined>(networkState.type)
 
     // Ask for location permission first time only
     useEffect(() => {
@@ -75,33 +80,53 @@ export default function Home() {
         }) ();
     }, [])
 
-    // Get ip address on first render
+    // Get ip address every 5 seconds
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            const ip = await Network.getIpAddressAsync();
+            console.log(ip)
+            setCurrentIP(ip);
+            
+            if(ip.startsWith('10.182')) {
+                setNetworkInfo("Eduroam")
+                setIsEduroamConnected(true)
+                wasIPWarningShown.current = false
+            }
+            else {
+                setNetworkInfo("Nie połączono")
+                setIsEduroamConnected(false)
+
+                if (!wasIPWarningShown.current) {
+                    openMessage();
+                    wasIPWarningShown.current = true
+                }
+            }
+
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // Get activities on first render
     useEffect(() => {
         (async () => {
-            const ip = await Network.getIpAddressAsync();
-            setCurrentIP(ip)
+            const activities = await getActivities();
+            const sortedActivities = activities.sort(
+                (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+            );
+            setActivities(sortedActivities)
             return;
         }) ();
     }, [])
 
-
-    // Listen for network state changes
-    // useEffect(() => {
-    //         const subscription = Network.addNetworkStateListener(({type}) => {
-    //         console.log('network changed')
-    //     });
-
-    //     return () => {
-    //         subscription.remove(); // cleanup on unmount
-    //     };
-    // }, []);
-
-    // TODO: Open modal only when changing from wifi to cellular
-    // maybe use ref for previous state
     Network.addNetworkStateListener(({type}) => {
-        if(type === Network.NetworkStateType.CELLULAR) {
+        const previousNetworkType = networkType.current
+
+        if(previousNetworkType === Network.NetworkStateType.WIFI && type === Network.NetworkStateType.CELLULAR) {
             openMessage();
         }
+
+        networkType.current = type;
     });
 
     const testNetworkParameters = async () => {
@@ -228,6 +253,14 @@ export default function Home() {
         setMessageVisible(false)
     }
 
+    const openActivityDetails = () => {
+        setActivityDetailsVisible(true)
+    }
+
+    const closeActivityDetails = () => {
+        setActivityDetailsVisible(false)
+    }
+
     // TODO: Fix refresh. Add abort to fetch calls
     const onRefreshClick = () => {
 
@@ -277,7 +310,20 @@ export default function Home() {
 
             <View style={styles.networkInfoButtonsContainer}>
                 <AnimatedButton scale={scaleInfo} onPress={openMessage} buttonStyles={styles.wifiNameButtonContainer}>
-                    <Text style={styles.wifiNameButtonText}>{networkState.type}</Text>
+                    <Text
+                        style={[ styles.wifiNameButtonText,
+                            {
+                            color:
+                                networkState.type === Network.NetworkStateType.CELLULAR
+                                    ? Colors.light.indicatorBad
+                                    : isEduroamConnected && networkState.type === Network.NetworkStateType.WIFI
+                                    ? Colors.light.indicatorInfo
+                                    : Colors.light.indicatorMid,
+                            }]}
+                    >
+                        {networkInfo}
+                    </Text>
+                    
                 </AnimatedButton>
                 <AnimatedButton scale={scaleConnect} onPress={openModal} buttonStyles={styles.connectButtonContainer}>
                     <Text style={styles.connectButtonText}>Połącz się</Text>
@@ -309,13 +355,33 @@ export default function Home() {
             </View>
             
             {/* Pop-ups */}
-            <MessageModal 
-                isVisible={messageVisible} 
-                onClose={closeMessage} 
+            
+            { isEduroamConnected && 
+                <MessageModal
+                    isVisible={messageVisible}
+                    onClose={closeMessage}
+                    messageType="info"
+                    headerText="Połączono z eduroam"
+                    mainText="Aplikacja jest w pełni funkcjonalna."
+                    secondaryText={`Aktualne ip: ${currentIP}`}
+                /> }
+
+            { (!isEduroamConnected && networkState.type === Network.NetworkStateType.WIFI) && 
+                <MessageModal
+                    isVisible={messageVisible}
+                    onClose={closeMessage}
+                    messageType="warning"
+                    headerText="Nie połączono z eduroam"
+                    mainText="Aplikacja wymaga połączenia z eduroam do pełnego działania. Kliknij 'Połącz się' na ekranie głównym żeby zobaczyć instrukcję."
+                    secondaryText={`Aktualne ip: ${currentIP}`}
+                /> }
+            
+            <MessageModal
+                isVisible={messageVisible}
+                onClose={closeMessage}
                 messageType="error"
-                headerText="Brak połączenia z WiFi!"
-                mainText="Połączenie z wifi jest wymagane do działania aplikacji."
-                secondaryText='Kliknij przycisk "Połącz się" na ekranie głównym, żeby zobaczyć instrukcję połączenia z eduroam'
+                headerText="Rozłączono z WiFi"
+                mainText="Aplikacja wymaga połączenia z WiFi do pełnego działania. Kliknij 'Połącz się' na ekranie głównym żeby zobaczyć instrukcję."
             />
             <ConnectionTutorial isVisible={modalVisible} onClose={closeModal}/>
             <Toast/>
@@ -464,5 +530,5 @@ const styles = StyleSheet.create({
     lastActivitiesHeaderText: {
         fontSize: 24,
         fontWeight: '700'
-    }
+    },
 })

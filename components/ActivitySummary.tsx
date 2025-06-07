@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Colors } from "@/constants/Colors";
 import { Activity } from "@/utils/activities";
 import MessageModal from "./MessageModal";
+import MessageModalChildren from "./MessageModalChildren";
 
 interface props {
     activity: Activity
@@ -35,14 +36,14 @@ const ActivitySummary: React.FC<props> = ({activity}) => {
                 </Text>
             </View>
         </Pressable>
-        <MessageModal
-            messageType="info"
-            headerText="Wynik testu"
-            mainText="test"
-            secondaryText="test"
-            isVisible={isModalVisible}
-            onClose={onClose}
-        />
+        <MessageModalChildren 
+                isVisible={isModalVisible}
+                onClose={onClose}
+                messageType="info"
+                headerText="Szczegóły testu"
+            >
+                <Text style={styles.activityDetailsText}>Test</Text>
+            </MessageModalChildren>
         </>
     )
 }
@@ -74,6 +75,10 @@ const styles = StyleSheet.create({
     subText: {
         fontSize: 12,
         color: '#a3a3a3'
+    },
+    activityDetailsText: {
+        fontSize: 13,
+        textAlign: 'justify'
     }
 })
 

@@ -11,7 +11,8 @@ export const Colors = {
 
         indicatorBad: '#B22D2D',
         indicatorMid: '#E4A316',
-        indicatorGood: '#67B22D'
+        indicatorGood: '#67B22D',
+        indicatorInfo: '#1575B9',
     },
 
     dark: {

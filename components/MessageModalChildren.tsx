@@ -1,19 +1,20 @@
 import {Modal, View, Text, StyleSheet, Pressable, Animated} from 'react-native'
-import { useRef } from 'react';
 import {ExclamationTriangleIcon, InformationCircleIcon, XCircleIcon, CheckCircleIcon} from 'react-native-heroicons/outline'
 import { Colors } from '@/constants/Colors';
 import AnimatedButton from './AnimatedButton';
+import * as React from 'react';
+import { useRef } from 'react';
+
 
 interface props {
     messageType: 'success' | 'warning' | 'info' | 'error',
     headerText: string,
-    mainText: string,
-    secondaryText? : string,
     isVisible: boolean,
+    children?: React.ReactNode,
     onClose: () => void
 }
 
-const MessageModal: React.FC<props> = ({messageType, headerText, mainText, secondaryText, isVisible, onClose}) => {
+const MessageModalChildren: React.FC<props> = ({messageType, headerText, isVisible, children, onClose}) => {
 
     const scaleUnderstood = useRef(new Animated.Value(1)).current;
   
@@ -34,8 +35,7 @@ const MessageModal: React.FC<props> = ({messageType, headerText, mainText, secon
                         <Text style={styles.modalTitle}>{headerText}</Text>
                     </View>
                     <View style={styles.modalMainContainer}>
-                        <Text style={styles.modalMainText}>{mainText}</Text>
-                        <Text style={styles.modalMainText}>{secondaryText}</Text>
+                        {children}
                     </View>
                     <View style={styles.modalFooterContainer}>
                         <AnimatedButton onPress={onClose} scale={scaleUnderstood} buttonStyles={styles.modalFooterButton}>
@@ -106,4 +106,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default MessageModal;
+export default MessageModalChildren;
