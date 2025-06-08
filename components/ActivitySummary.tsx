@@ -20,6 +20,13 @@ const ActivitySummary: React.FC<props> = ({activity}) => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
     const [date, setDate] = useState<Date>()
 
+    const region = {
+        latitude: 51.10917857423356,
+        longitude: 17.060385434296492,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.01,
+    }
+
     const onClick = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
 
@@ -56,12 +63,31 @@ const ActivitySummary: React.FC<props> = ({activity}) => {
                     messageType="info"
                     headerText="Szczegóły testu"
                 >
-                    <Text style={styles.activityDetailsText}>{date?.toLocaleDateString()} {date?.toLocaleTimeString()}</Text>
-                    <Text style={styles.activityDetailsText}>Pobieranie: {activity.download_speed} Mbps</Text>
-                    <Text style={styles.activityDetailsText}>Wysyłanie: {activity.upload_speed} Mbps</Text>
-                    <Text style={styles.activityDetailsText}>Ping: {activity.ping} Ms</Text>
+                    <Text style={styles.activityDetailsDate}>{date?.toLocaleDateString()} {date?.toLocaleTimeString()}</Text>
+
+                    <View style={styles.activityDetailsVulesContainer}>
+                        <View style={styles.singleValueContainer}>
+                            <Text style={styles.activityDetailsValue}>{activity.download_speed}</Text>
+                            <Text style={styles.activityDetailsDescriptionText}>Pobieranie</Text>
+                        </View>
+                        <View style={styles.singleValueContainer}>
+                            <Text style={styles.activityDetailsValue}>{activity.upload_speed}</Text>
+                            <Text style={styles.activityDetailsDescriptionText}>Wysyłanie</Text>
+                        </View>
+                        <View style={styles.singleValueContainer}>
+                            <Text style={styles.activityDetailsValue}>{activity.ping}</Text>
+                            <Text style={styles.activityDetailsDescriptionText}>Ping</Text>
+                        </View>
+                    </View>
+
                     <View style={styles.mapWrapper}>
-                        <MapView style={styles.map}>
+                        <MapView 
+                            style={styles.map}
+                            region={region}
+                            showsUserLocation={true}
+                            cameraZoomRange={{minCenterCoordinateDistance: 200, maxCenterCoordinateDistance: 1500}}
+
+                        >
                             <Marker
                                 coordinate={{
                                     latitude: activity.latitude,
@@ -103,10 +129,30 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#a3a3a3'
     },
-    activityDetailsText: {
+    activityDetailsDate: {
         fontSize: 13,
-        textAlign: 'justify'
+        textAlign: 'justify',
+        color: '#B2B2B2'
     },
+    activityDetailsValue: {
+        fontSize: 16,
+        fontWeight: '600'
+    },
+    activityDetailsVulesContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+    },
+    singleValueContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1/3,
+        paddingHorizontal: 8
+    },
+    activityDetailsDescriptionText: {
+        fontSize: 13,
+        color: '#B2B2B2'
+    },  
     mapWrapper: {
         width: '100%',
         height: 200,

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet} from "react-native";
 import MapView, { Circle, LatLng, Marker, Polygon } from "react-native-maps";
 import { useLocalSearchParams, useFocusEffect } from "expo-router";
-import {useState, useCallback} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import {Colors} from '@/constants/Colors'
 
 interface measurementPoint {
@@ -18,6 +18,15 @@ interface measurementPoint {
         longitudeDelta: 0.015,
       });
     
+    useEffect(() => {
+        const loadMapData = async () => {
+
+        };
+
+        loadMapData();
+    }, []);
+
+
     const circlesNew: Array<measurementPoint> = []
     const circles: Array<LatLng> = [
         {latitude: 51.109885535541, longitude: 17.0578444319407},

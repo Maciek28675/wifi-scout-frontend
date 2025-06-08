@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   modalMainContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 16,
     marginVertical: 16,
