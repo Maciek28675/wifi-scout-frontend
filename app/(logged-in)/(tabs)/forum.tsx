@@ -13,11 +13,13 @@ import {
   Ionicons, 
   FontAwesome 
 } from '@expo/vector-icons';
+import { useRouter} from 'expo-router';
 import { useUserInitials } from '../../../hooks/useUserInitials';
-import { useAddPost } from '../../../hooks/useAddPost';
-import AddPostModal from '../../../props/AddPostModal';
 import PostModal from '../../../props/PostModal';
 import { useAddComment } from '../../../hooks/useAddComment';
+import { AuthContext } from '../../../context/AuthContext';
+
+const router = useRouter();
 
 export interface Post {
   post_id: number;
@@ -34,81 +36,63 @@ interface RenderItemProps {
 }
 
 export default function ForumScreen() {
-  // const { userId } = useContext(AuthContext); // Uncomment this if you have userId from context
-  const [activeTab, setActiveTab] = useState<'newest'|'popular'|'my'>('newest');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+    const { userId } = useContext(AuthContext) as { userId: number | null };
+    const [activeTab, setActiveTab] = useState<'newest'|'popular'|'my'>('newest');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
 
-  // Add post hooks
-  const { addPost, loading, error } = useAddPost();
-  const [modalVisible, setModalVisible] = useState(false);
+    // Add post hooks
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-  const handleOpenPost = (post: Post) => setSelectedPost(post);
-  const handleClosePost = () => setSelectedPost(null);
+    const handleOpenPost = (post: Post) => setSelectedPost(post);
+    const handleClosePost = () => setSelectedPost(null);
 
-  // Comment hooks
+    // Comment hooks
     const { addComment, loading: commentLoading } = useAddComment();
-  const handleAddCommentToPost = async (postId: number, content: string) => {
+    const handleAddCommentToPost = async (postId: number, content: string) => {
     await addComment(postId, content);
     // TODO: dodać logikę odświeżenia komentarzy
   };
 
-  const handleAddPost = async ({ title, location }: { title: string; location: string }) => {
-    const now = new Date();
-    const time = `${now.getTime()}`;
-    const newPost = await addPost({
-      user_id: 1, 
-      // user_id: userId, // Uncomment this if you have userId from context
-      title,
-      location,
-      time,
-    });
-    if (newPost) {
-      setFilteredPosts(prev => [newPost as Post, ...prev]);
-      setModalVisible(false);
-    }
-  };
+    const posts: Post[] = [
+        {
+            post_id: 1,
+            user_id: userId || 1,
+            title: 'Gdzie znajdę najlepszy zasięg na kampusie?',
+            likes: 5,
+            comments: 2,
+            time: '1 h temu',
+            location: 'C-16'
+        },
+        {
+            post_id: 2,
+            user_id: 3,
+            title: 'Gdzie znajdę najlepszy zasięg na kampusie?',
+            likes: 7,
+            comments: 7,
+            time: '1 h temu',
+            location: 'C-14'
+        },
+        {
+            post_id: 3,
+            user_id: 4,
+            title: 'Gdzie znajdę najlepszy zasięg na kampusie?',
+            likes: 5,
+            comments: 2,
+            time: '1 h temu',
+            location: 'C-3'
+        },
+        {
+            post_id: 4,
+            user_id: 5,
+            title: 'Gdzie znajdę najlepszy zasięg na kampusie?',
+            likes: 7,
+            comments: 7,
+            time: '1 h temu',
+            location: 'C-2'
+        }
+    ];
 
-  const posts: Post[] = [
-    {
-      post_id: 1,
-      user_id: 2,
-      title: 'Gdzie znajdę najlepszy zasięg na kampusie?',
-      likes: 5,
-      comments: 2,
-      time: '1 h temu',
-      location: 'C-16'
-    },
-    {
-      post_id: 2,
-      user_id: 3,
-      title: 'Gdzie znajdę najlepszy zasięg na kampusie?',
-      likes: 7,
-      comments: 7,
-      time: '1 h temu',
-      location: 'C-14'
-    },
-    {
-      post_id: 3,
-      user_id: 4,
-      title: 'Gdzie znajdę najlepszy zasięg na kampusie?',
-      likes: 5,
-      comments: 2,
-      time: '1 h temu',
-      location: 'C-3'
-    },
-    {
-      post_id: 4,
-      user_id: 5,
-      title: 'Gdzie znajdę najlepszy zasięg na kampusie?',
-      likes: 7,
-      comments: 7,
-      time: '1 h temu',
-      location: 'C-2'
-    }
-  ];
-
-  useEffect(() => {
+    useEffect(() => {
     let result = [...posts];
     
     if (searchQuery) {
@@ -244,18 +228,10 @@ export default function ForumScreen() {
         loading={commentLoading}
       />
 
-      <AddPostModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSubmit={handleAddPost}
-        loading={loading}
-        error={error}
-      />
-      
       {/* Dodawanie posta przycisk */}
-      <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
-        <Ionicons name="add" size={24} color="white" />
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.fab} onPress={() => router.push('../modal')}>
+            <Ionicons name="add" size={24} color="white" />
+        </TouchableOpacity>
     </SafeAreaView>
   );
 }

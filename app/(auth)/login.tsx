@@ -1,8 +1,18 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { router } from 'expo-router'
 import { Colors } from "@/constants/Colors";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Login () {
+    const { login } = useAuth();
+    const handleLogin = async () => {
+        const response = await fetch('/api/login'); // przykład, zamienic na hook login
+        const userData = await response.json();
+        
+        login(userData.userId);
+        router.push('../(logged-in)/(tabs)');
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Under construction - Login Form</Text>

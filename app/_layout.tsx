@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
+import { AuthProvider } from "../context/AuthContext";
 
 export default function RootLayout() {
 
@@ -12,9 +13,11 @@ export default function RootLayout() {
   }
 
   return(
-    <Stack>
-      <Stack.Screen name="(auth)" options={{headerShown: false}}/>
-      <Stack.Screen name="(logged-in)" options={{headerShown: false}}/>
-    </Stack>
+    <AuthProvider>
+      <Stack>
+        <Stack.Screen name="(auth)" options={{headerShown: false}}/>
+        <Stack.Screen name="(logged-in)" options={{headerShown: false}}/>
+      </Stack>
+    </AuthProvider>
   );
 }
