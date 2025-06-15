@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import {ExclamationTriangleIcon, InformationCircleIcon, XCircleIcon, CheckCircleIcon} from 'react-native-heroicons/outline'
 import { Colors } from '@/constants/Colors';
 import AnimatedButton from './AnimatedButton';
+import { useTranslation } from 'react-i18next';
 
 interface props {
     messageType: 'success' | 'warning' | 'info' | 'error',
@@ -16,7 +17,8 @@ interface props {
 const MessageModal: React.FC<props> = ({messageType, headerText, mainText, secondaryText, isVisible, onClose}) => {
 
     const scaleUnderstood = useRef(new Animated.Value(1)).current;
-  
+
+    const { t } = useTranslation();
 
     const indicator: {[key: string]: React.JSX.Element} = {
         'success': <CheckCircleIcon size={32} color={Colors.light.indicatorGood}/>,
@@ -39,7 +41,7 @@ const MessageModal: React.FC<props> = ({messageType, headerText, mainText, secon
                     </View>
                     <View style={styles.modalFooterContainer}>
                         <AnimatedButton onPress={onClose} scale={scaleUnderstood} buttonStyles={styles.modalFooterButton}>
-                            <Text style={styles.modalFooterButtonText}>Rozumiem</Text>
+                            <Text style={styles.modalFooterButtonText}>{t('utils.understand')}</Text>
                         </AnimatedButton>
                     </View>
                 </View>

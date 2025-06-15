@@ -1,0 +1,52 @@
+{
+    "settings": {
+        "app_settings": "Ustawienia aplikacji",
+        "night_mode": "Tryb nocny",
+        "language": "Język"
+    },
+    "auth": {
+        "login": "Zaloguj się",
+        "register": "Zarejestruj się",
+        "to_home": "Przejdź do strony głównej"
+    },
+    "utils": {
+        "loading": "Ładowanie...",
+        "error": "Błąd",
+        "no_data": "Brak danych",
+        "retry": "Spróbuj ponownie",
+        "under_construction": "W budowie",
+        "understand": "Rozumiem"
+    },
+    "network": {
+        "error_message": "Brak połączenia z Eduroam.",
+        "error_title": "Nie można wykonać testu",
+        "success_title": "Test sieci zakończony!",
+        "success_message": "Wynik widoczny na mapie i w aktywności",
+        "error_refresh": "Błąd odświeżania danych",
+        "refresh_error_message": "Test nie został uruchomiony.",
+        "refresh_error_title": "Nie można odświeżyć",
+        "refresh_title": "Test sieci przerwany!",
+        "refresh_message": "Uruchom ponownie klikając Szybki Skan",
+        "ping": "Opóźnienie (ms)",
+        "download_speed": "Pobieranie (Mbps)",
+        "upload_speed": "Wysyłanie (Mbps)",
+        "connect": "Połącz się",
+        "last_activities": "Ostatnie Aktywności",
+        "testing": "W trakcie...",
+        "quick_test": "Szybki Skan",
+        "connected_header": "Połączono z eduroam",
+        "connected_message": "Aplikacja jest w pełni funkcjonalna.",
+        "connected_secondary": "Aktualne ip: {{ip}}",
+        "not_connected_header": "Nie połączono z eduroam",
+        "not_connected_message": "Aplikacja wymaga połączenia z eduroam do pełnego działania. Kliknij 'Połącz się' na ekranie głównym żeby zobaczyć instrukcję.",
+        "no_wifi_header": "Rozłączono z WiFi",
+        "no_wifi_message": "Aplikacja wymaga połączenia z WiFi do pełnego działania. Kliknij 'Połącz się' na ekranie głównym żeby zobaczyć instrukcję.",
+        "not_connected": "Nie połączono"
+    },
+    "tabs": {
+        "home": "Strona główna",
+        "map": "Mapa",
+        "forum": "Forum",
+        "settings": "Ustawienia"
+    }
+}

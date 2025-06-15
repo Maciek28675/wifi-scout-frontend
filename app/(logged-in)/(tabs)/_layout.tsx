@@ -8,10 +8,11 @@ import { HomeIcon as HomeIconSolid,
          MapIcon as MapIconSolid, 
          UsersIcon as UsersIconSolid,
          Cog6ToothIcon as Cog6ToothIconSolid, } from 'react-native-heroicons/solid'
-
+import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
     const insets = useSafeAreaInsets();
+    const { t } = useTranslation();
 
     return (
         <Tabs
@@ -39,7 +40,7 @@ export default function TabLayout() {
             
         >
             <Tabs.Screen name="index" options={{
-                title: 'Home',
+                title: t('tabs.home'),
                 headerShown: false,
                 tabBarIcon: ({color, focused}) => 
                     focused ? (
@@ -51,7 +52,7 @@ export default function TabLayout() {
                 
             }}/>
             <Tabs.Screen name="map" options={{
-                title: 'Map',
+                title: t('tabs.map'),
                 //headerShown: false,
                 tabBarIcon: ({color, focused}) => 
                     focused ? (
@@ -62,7 +63,7 @@ export default function TabLayout() {
                 tabBarStyle: {height: 75},
             }}/>
             <Tabs.Screen name="forum" options={{
-                title: 'Forum',
+                title: t('tabs.forum'),
                 headerShown: false,
                 tabBarIcon: ({color, focused}) => 
                     focused ? (
@@ -74,7 +75,7 @@ export default function TabLayout() {
 
             }}/>
             <Tabs.Screen name="settings" options={{
-                title: 'Settings',
+                title: t('tabs.settings'),
                 headerShown: false,
                 tabBarIcon: ({color, focused}) => 
                     focused ? (

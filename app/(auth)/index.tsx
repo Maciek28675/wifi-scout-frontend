@@ -6,8 +6,12 @@ import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import "@/app/i18n";
+import { useTranslation } from 'react-i18next';
 
 export default function Index() {
+  
+  const { t } = useTranslation();
   
   const scaleSignIn = useRef(new Animated.Value(1)).current;
   const scaleRegister = useRef(new Animated.Value(1)).current;
@@ -95,7 +99,7 @@ export default function Index() {
               end={[1, 0]}
               style={styles.gradientButton}
             >
-              <Text style={styles.buttonText}>Sign in</Text>
+              <Text style={styles.buttonText}>{t('auth.login')}</Text>
             </LinearGradient>
           </Animated.View>
           </Pressable>
@@ -107,7 +111,7 @@ export default function Index() {
                 end={[1, 0]}
                 style={styles.gradientButton}
               >
-                <Text style={styles.buttonText}>Register</Text>
+                <Text style={styles.buttonText}>{t('auth.register')}</Text>
               </LinearGradient>
           </Animated.View>
         </Pressable>

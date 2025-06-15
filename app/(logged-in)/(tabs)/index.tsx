@@ -25,6 +25,7 @@ import testUpload from "@/utils/testUpload";
 import testPing from "@/utils/testPing";
 import { addActivity, getActivities, getActivitiesLength, Activity } from "@/utils/activities";
 
+import { useTranslation } from 'react-i18next';
 interface Measurement {
     latitude: number,
     longitude: number,
@@ -35,6 +36,7 @@ interface Measurement {
 }
 
 export default function Home() {
+    const { t } = useTranslation();
 
     // Listen for network related changes
     const networkState = useNetworkState();
@@ -93,7 +95,7 @@ export default function Home() {
                 wasIPWarningShown.current = false
             }
             else {
-                setNetworkInfo("Nie połączono")
+                setNetworkInfo(t('network.not_connected'))
                 setIsEduroamConnected(false)
 
                 if (!wasIPWarningShown.current) {
@@ -156,8 +158,8 @@ export default function Home() {
         if (!isEduroamConnected || networkState.type !== Network.NetworkStateType.WIFI) {
             Toast.show({
                 type: 'error',
-                text1: 'Nie można wykonać testu!',
-                text2: 'Brak połączenia z Eduroam.'
+                text1: t('network.error_title'),
+                text2: t('network.error_message')
             })
         }
         else {
@@ -238,8 +240,8 @@ export default function Home() {
 
                 Toast.show({
                     type: "success",
-                    text1: "Test sieci zakończony!",
-                    text2: "wynik widoczny na mapie i w aktywności"
+                    text1: t('network.success_title'),
+                    text2: t('network.success_message')
                 })
             }
 
@@ -277,8 +279,8 @@ export default function Home() {
         if (!isTestLoading){
             Toast.show({
                 type: "error",
-                text1: "Nie można odświeżyć!",
-                text2: "Test nie został uruchomiony."
+                text1: t('network.refresh_error_title'),
+                text2: t('network.refresh_error_message')
             })
         }
         else {
@@ -296,8 +298,8 @@ export default function Home() {
 
             Toast.show({
                 type: "info",
-                text1: "Test sieci przerwany!",
-                text2: "Uruchom ponownie klikając Szybki Skan"
+                text1: t('network.refresh_title'),
+                text2: t('network.refresh_message')
             })
         }
     }
@@ -313,9 +315,9 @@ export default function Home() {
             </View>
 
             <View style={styles.speedTestResultContainer}>
-                <NetworkInfo data={downloadSpeed} label="Pobieranie (Mbps)" color={Colors.light.gradientRight} loading={isDownloadLoading}/>
-                <NetworkInfo data={uploadSpeed} label="Wysyłanie (Mbps)" color={Colors.light.gradientRight} loading={isUploadLoading}/>
-                <NetworkInfo data={ping} label="Opóźnienie (ms)" color={Colors.light.gradientRight} loading={isPingLoading}/>
+                <NetworkInfo data={downloadSpeed} label={t('network.download_speed')} color={Colors.light.gradientRight} loading={isDownloadLoading}/>
+                <NetworkInfo data={uploadSpeed} label={t('network.upload_speed')} color={Colors.light.gradientRight} loading={isUploadLoading}/>
+                <NetworkInfo data={ping} label={t('network.ping')} color={Colors.light.gradientRight} loading={isPingLoading}/>
             </View>
 
             <View style={styles.networkInfoButtonsContainer}>
@@ -336,12 +338,14 @@ export default function Home() {
                     
                 </AnimatedButton>
                 <AnimatedButton scale={scaleConnect} onPress={openModal} buttonStyles={styles.connectButtonContainer}>
-                    <Text style={styles.connectButtonText}>Połącz się</Text>
+                    <Text style={styles.connectButtonText}>{t('network.connect')}</Text>
                 </AnimatedButton>
             </View>
 
             <View style={styles.lastActivitiesHeaderContainer}>
-                <Text style={styles.lastActivitiesHeaderText}>Ostatnie Aktywności</Text>
+                <Text style={styles.lastActivitiesHeaderText}>
+                    {t('network.last_activities')}
+                </Text>
             </View>
             
             {/* #TODO: Fix shadow */ }
@@ -357,9 +361,11 @@ export default function Home() {
             <View style={styles.actionButtonsContainer}>
                 <AnimatedButton scale={scaleScan} onPress={testNetworkParameters} disabled={isTestLoading} buttonStyles={styles.quickScanButtonContainer}>
                     {isTestLoading ? (
-                            <Text style={styles.quickScanButtonText}>W trakcie...</Text>
+                            <Text style={styles.quickScanButtonText}>{t('network.testing')}</Text>
                         ): (
-                            <Text style={styles.quickScanButtonText}>Szybki Skan</Text>
+                            <Text style={styles.quickScanButtonText}>
+                                {t('network.quick_test')}
+                            </Text>
                     )}
                 </AnimatedButton>
             </View>
@@ -371,9 +377,9 @@ export default function Home() {
                     isVisible={messageVisible}
                     onClose={closeMessage}
                     messageType="info"
-                    headerText="Połączono z eduroam"
-                    mainText="Aplikacja jest w pełni funkcjonalna."
-                    secondaryText={`Aktualne ip: ${currentIP}`}
+                    headerText={t('network.connected_header')}
+                    mainText={t('network.connected_message')}
+                    secondaryText={t('network.connected_secondary', {ip: currentIP})}
                 /> }
 
             { (!isEduroamConnected && networkState.type === Network.NetworkStateType.WIFI) && 
@@ -381,17 +387,17 @@ export default function Home() {
                     isVisible={messageVisible}
                     onClose={closeMessage}
                     messageType="warning"
-                    headerText="Nie połączono z eduroam"
-                    mainText="Aplikacja wymaga połączenia z eduroam do pełnego działania. Kliknij 'Połącz się' na ekranie głównym żeby zobaczyć instrukcję."
-                    secondaryText={`Aktualne ip: ${currentIP}`}
+                    headerText={t('network.not_connected_header')}
+                    mainText= {t('network.not_connected_message')}
+                    secondaryText= {t('network.connected_secondary', {ip: currentIP})}
                 /> }
             
             { networkState.type !== Network.NetworkStateType.WIFI && <MessageModal
                 isVisible={messageVisible}
                 onClose={closeMessage}
                 messageType="error"
-                headerText="Rozłączono z WiFi"
-                mainText="Aplikacja wymaga połączenia z WiFi do pełnego działania. Kliknij 'Połącz się' na ekranie głównym żeby zobaczyć instrukcję."
+                headerText={t('network.no_wifi_header')}
+                mainText={ t('network.no_wifi_message') }
             /> }
             <ConnectionTutorial isVisible={modalVisible} onClose={closeModal}/>
             <Toast/>

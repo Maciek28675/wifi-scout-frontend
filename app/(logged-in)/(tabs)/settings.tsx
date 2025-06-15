@@ -8,6 +8,8 @@ import {
   Pressable,
   SafeAreaView,
 } from 'react-native';
+import "@/app/i18n";
+import { useTranslation } from 'react-i18next';
 
 // Constants
 import { Colors } from '@/constants/Colors';
@@ -16,32 +18,32 @@ import { Colors } from '@/constants/Colors';
 import { MoonIcon, SunIcon, GlobeAltIcon } from 'react-native-heroicons/outline';
 
 export default function Settings() {
-  const email = '272572@student.pwr.edu.pl';          
-  const initials = email.slice(0, 2).toUpperCase();
 
   const [isDark, setIsDark] = useState(false);
-  const [lang, setLang] = useState<'pl' | 'en'>('pl');
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = () => {
+    if (i18n.language.startsWith('pl')) {
+      i18n.changeLanguage('en-US');
+    } else {
+      i18n.changeLanguage('pl-PL');
+    }
+  };
+
+  const currentLangLabel = i18n.language.startsWith('pl') ? 'Polski' : 'English';
+
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* User info */}
-      <View style={styles.card}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{initials}</Text>
-        </View>
-        <View>
-          <Text style={styles.name}>{email}</Text>
-        </View>
-      </View>
 
       {/* Nagłówek */}
-      <Text style={styles.sectionHeaderText}>Ustawienia aplikacji</Text>
+      <Text style={styles.sectionHeaderText}>{t("settings.app_settings")}</Text>
 
       {/* Motyw do wyboru */}
       <View style={styles.row}>
         {isDark ? <MoonIcon size={24} color={Colors.light.indicatorInfo}/> :
                   <SunIcon size={24} color={Colors.light.indicatorInfo}/> }
-        <Text style={styles.rowLabel}>Tryb Nocny</Text>
+        <Text style={styles.rowLabel}>{t("settings.night_mode")}</Text>
         <Switch
           value={isDark}
           onValueChange={() => setIsDark(!isDark)}
@@ -51,10 +53,10 @@ export default function Settings() {
       </View>
 
       {/* Język do wyboru */}
-      <Pressable style={styles.row} onPress={() => setLang(lang === 'pl' ? 'en' : 'pl')}>
+      <Pressable style={styles.row} onPress={handleLanguageChange}>
         <GlobeAltIcon size={24} color={Colors.light.indicatorInfo}/>
-        <Text style={styles.rowLabel}>Język</Text>
-        <Text style={styles.rowValue}>{lang === 'pl' ? 'Polski' : 'English'}</Text>
+        <Text style={styles.rowLabel}>{t('settings.language')}</Text>
+        <Text style={styles.rowValue}>{currentLangLabel}</Text>
       </Pressable>
     </SafeAreaView>
   );
@@ -93,6 +95,7 @@ const styles = StyleSheet.create({
   name:  { fontSize: 16, fontWeight: '600' },
 
   sectionHeaderText: {
+    paddingTop: 16,
     fontSize: 14,
     fontWeight: '700',
     color: '#555',
