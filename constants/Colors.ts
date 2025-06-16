@@ -4,6 +4,7 @@ export const Colors = {
         gradientRight: '#3ED6B7',
 
         textPrimary: '#FFFFFF',
+        textSecondary: '#B2B2B2',
 
         backgroundPrimary: '#FFFFFF',
 

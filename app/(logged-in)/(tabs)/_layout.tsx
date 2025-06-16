@@ -3,7 +3,7 @@ import { router, Tabs } from 'expo-router';
 import { Colors } from '@/constants/Colors'
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { HomeIcon, MapIcon, UsersIcon, Cog6ToothIcon } from 'react-native-heroicons/outline'
+import { HomeIcon, MapIcon, UsersIcon, Cog6ToothIcon , PlusCircleIcon} from 'react-native-heroicons/outline'
 import { HomeIcon as HomeIconSolid, 
          MapIcon as MapIconSolid, 
          UsersIcon as UsersIconSolid,
@@ -51,8 +51,8 @@ export default function TabLayout() {
                 
             }}/>
             <Tabs.Screen name="map" options={{
-                title: 'Map',
-                //headerShown: false,
+                title: 'Mapa',
+                headerShown: false,
                 tabBarIcon: ({color, focused}) => 
                     focused ? (
                         <MapIconSolid color={color} size={24}/>

@@ -80,6 +80,32 @@ export default function Home() {
         }) ();
     }, [])
 
+    // Get IP on first render
+    useEffect( () => {
+        const getIPFirstTime = async () => {
+            const ip = await Network.getIpAddressAsync();
+            console.log(ip)
+            setCurrentIP(ip);
+            
+            if(ip.startsWith('10.182')) {
+                setNetworkInfo("Eduroam")
+                setIsEduroamConnected(true)
+                wasIPWarningShown.current = false
+            }
+            else {
+                setNetworkInfo("Nie połączono")
+                setIsEduroamConnected(false)
+
+                if (!wasIPWarningShown.current) {
+                    openMessage();
+                    wasIPWarningShown.current = true
+                }
+            }
+        };
+
+        getIPFirstTime();
+    }, [])
+
     // Get ip address every 5 seconds
     useEffect(() => {
         const interval = setInterval(async () => {

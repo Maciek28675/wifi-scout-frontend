@@ -10,7 +10,6 @@ import { StatusBar } from 'expo-status-bar';
 export default function Index() {
   
   const scaleSignIn = useRef(new Animated.Value(1)).current;
-  const scaleRegister = useRef(new Animated.Value(1)).current;
 
   const nokiaFadeAnim = useRef(new Animated.Value(0)).current;
   const pwrFadeAnim = useRef(new Animated.Value(0)).current;
@@ -87,7 +86,7 @@ export default function Index() {
         </Animated.View>
       </View>
       <View style={styles.buttonsContainer}>
-        <Pressable style={styles.button} onPress={() => router.push("/(auth)/login")} onPressIn={() => onPressIn(scaleSignIn)} onPressOut={() => onPressOut(scaleSignIn)}>
+        <Pressable style={styles.button} onPress={() => router.push("/(logged-in)/(tabs)")} onPressIn={() => onPressIn(scaleSignIn)} onPressOut={() => onPressOut(scaleSignIn)}>
           <Animated.View style={[styles.gradientButton, {transform: [{scale: scaleSignIn}]}]}>
             <LinearGradient 
               colors={[Colors.light.gradientLeft, Colors.light.gradientRight]}
@@ -95,22 +94,10 @@ export default function Index() {
               end={[1, 0]}
               style={styles.gradientButton}
             >
-              <Text style={styles.buttonText}>Sign in</Text>
+              <Text style={styles.buttonText}>Zaczynamy!</Text>
             </LinearGradient>
           </Animated.View>
           </Pressable>
-          <Pressable style={styles.button} onPressIn={() => onPressIn(scaleRegister)} onPressOut={() => onPressOut(scaleRegister)}>
-            <Animated.View style={[styles.gradientButton, {transform: [{scale: scaleRegister}]}]}>
-              <LinearGradient 
-                colors={[Colors.light.gradientLeft, Colors.light.gradientRight]}
-                start={[0, 0]}
-                end={[1, 0]}
-                style={styles.gradientButton}
-              >
-                <Text style={styles.buttonText}>Register</Text>
-              </LinearGradient>
-          </Animated.View>
-        </Pressable>
       </View>
       <StatusBar style="dark" />
     </View>
@@ -189,6 +176,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 24
   }
-
-
 })
