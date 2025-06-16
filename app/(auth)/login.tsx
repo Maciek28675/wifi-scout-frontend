@@ -1,16 +1,18 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { router } from 'expo-router'
 import { Colors } from "@/constants/Colors";
+import { useTranslation } from 'react-i18next';
 
 export default function Login () {
+    const { t } = useTranslation();
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Under construction - Login Form</Text>
+            <Text style={styles.text}>{t('utils.under_construction')}</Text>
             <Pressable
                 onPress={() => router.replace("/(logged-in)/(tabs)")}
                 style={styles.button}
             >
-                <Text style={styles.buttonText}>Go Home</Text>
+                <Text style={styles.buttonText}>{t('auth.to_home')}</Text>
             </Pressable>
         </View>
     )

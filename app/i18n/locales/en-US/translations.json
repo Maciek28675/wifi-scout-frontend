@@ -1,0 +1,52 @@
+{
+    "settings": {
+        "app_settings": "App Settings",
+        "night_mode": "Night Mode",
+        "language": "Language"
+    },
+    "auth": {
+        "login": "Log In",
+        "register": "Register",
+        "to_home": "Go to Home"
+    },
+    "utils": {
+        "loading": "Loading...",
+        "error": "Error",
+        "no_data": "No Data",
+        "retry": "Retry",
+        "under_construction": "Under Construction",
+        "understand": "Okay"
+    },
+    "network": {
+        "error_message": "No connection to Eduroam.",
+        "error_title": "Cannot perform test",
+        "success_title": "Network test completed!",
+        "success_message": "Result visible on map and in activity",
+        "error_refresh": "Data refresh error",
+        "refresh_error_message": "Test was not started.",
+        "refresh_error_title": "Cannot refresh",
+        "refresh_title": "Network test interrupted!",
+        "refresh_message": "Restart by clicking Quick Scan",
+        "ping": "Latency (ms)",
+        "download_speed": "Download (Mbps)",
+        "upload_speed": "Upload (Mbps)",
+        "connect": "Connect",
+        "last_activities": "Recent Activities",
+        "testing": "In progress...",
+        "quick_test": "Quick Scan",
+        "connected_header": "Connected to eduroam",
+        "connected_message": "App is fully functional.",
+        "connected_secondary": "Current IP: {{ip}}",
+        "not_connected_header": "Not connected to eduroam",
+        "not_connected_message": "App requires eduroam connection for full functionality. Click 'Connect' on the main screen to see instructions.",
+        "no_wifi_header": "Disconnected from WiFi",
+        "no_wifi_message": "App requires WiFi connection for full functionality. Click 'Connect' on the main screen to see instructions.",
+        "not_connected": "Not connected"
+    },
+    "tabs": {
+        "home": "Home",
+        "map": "Map",
+        "forum": "Forum",
+        "settings": "Settings"
+    }
+}
