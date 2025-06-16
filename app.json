@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-       "infoPlist": {
+      "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app requires location access to get the Wi-Fi network name."
       },
       "entitlements": {
@@ -46,9 +46,12 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Neotriad.otf"]
+          "fonts": [
+            "./assets/fonts/Neotriad.otf"
+          ]
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
