@@ -3,7 +3,7 @@ export const Colors = {
         gradientLeft: '#1575B9',
         gradientRight: '#3ED6B7',
 
-        textPrimary: '#FFFFFF',
+        textPrimary: '#222222',
         textSecondary: '#B2B2B2',
 
         backgroundPrimary: '#FFFFFF',

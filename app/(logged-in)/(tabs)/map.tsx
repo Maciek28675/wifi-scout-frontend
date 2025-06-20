@@ -4,6 +4,7 @@ import { useLocalSearchParams, useFocusEffect } from "expo-router";
 import {useState, useCallback, useEffect, useRef} from 'react';
 import {Colors} from '@/constants/Colors'
 import AnimatedButton from "@/components/AnimatedButton";
+import { useTranslation } from 'react-i18next';
 
 interface measurementPoint {
     center: LatLng,
@@ -11,7 +12,7 @@ interface measurementPoint {
     color: string
 }
  export default function Home() {
-
+    const { t } = useTranslation();
     // Animation scale declarations
     const scaleLegend = useRef(new Animated.Value(1)).current;
     const scaleUpdate = useRef(new Animated.Value(1)).current;
@@ -246,13 +247,13 @@ interface measurementPoint {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.optionsContainer}>
-                <Text style={styles.headerText}>Mapa Eduroam</Text>
+                <Text style={styles.headerText}>{t('map.connected_header')}</Text>
                 <View style={styles.buttonsContainer}>
                     <AnimatedButton scale={scaleLegend} onPress={() => {}} buttonStyles={styles.legendButtonContainer}>
-                        <Text style={styles.legendButtonText}>Legenda</Text>
+                        <Text style={styles.legendButtonText}>{t('map.legend')}</Text>
                     </AnimatedButton>
                     <AnimatedButton scale={scaleUpdate} onPress={onRefresh} buttonStyles={styles.updateButtonContainer}>
-                        <Text style={styles.updateButtonText}>Odśwież</Text>
+                        <Text style={styles.updateButtonText}>{t('map.refresh')}</Text>
                     </AnimatedButton>
                 </View>
             </View>
