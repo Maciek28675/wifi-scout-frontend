@@ -1,5 +1,4 @@
 // External
-import { useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +9,7 @@ import {
 } from 'react-native';
 import "@/app/i18n";
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/app/context/ThemeContext';
 
 // Constants
 import { Colors } from '@/constants/Colors';
@@ -18,8 +18,7 @@ import { Colors } from '@/constants/Colors';
 import { MoonIcon, SunIcon, GlobeAltIcon } from 'react-native-heroicons/outline';
 
 export default function Settings() {
-
-  const [isDark, setIsDark] = useState(false);
+  const { isDark, toggleTheme, theme } = useTheme();
   const { t, i18n } = useTranslation();
 
   const handleLanguageChange = () => {
@@ -32,31 +31,43 @@ export default function Settings() {
 
   const currentLangLabel = i18n.language.startsWith('pl') ? 'Polski' : 'English';
 
-
   return (
-    <SafeAreaView style={styles.container}>
-
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundPrimary }]}>
       {/* Nagłówek */}
-      <Text style={styles.sectionHeaderText}>{t("settings.app_settings")}</Text>
+      <Text style={[styles.sectionHeaderText, { color: theme.textSecondary }]}>
+        {t("settings.app_settings")}
+      </Text>
 
       {/* Motyw do wyboru */}
-      <View style={styles.row}>
-        {isDark ? <MoonIcon size={24} color={Colors.light.indicatorInfo}/> :
-                  <SunIcon size={24} color={Colors.light.indicatorInfo}/> }
-        <Text style={styles.rowLabel}>{t("settings.night_mode")}</Text>
+      <View style={[styles.row, { backgroundColor: isDark ? theme.cardBackground : '#FFF' }]}>
+        {isDark ? (
+          <MoonIcon size={24} color={theme.indicatorInfo} />
+        ) : (
+          <SunIcon size={24} color={theme.indicatorInfo} />
+        )}
+        <Text style={[styles.rowLabel, { color: theme.textPrimary }]}>
+          {t("settings.night_mode")}
+        </Text>
         <Switch
           value={isDark}
-          onValueChange={() => setIsDark(!isDark)}
-          thumbColor={isDark ? Colors.light.gradientLeft : '#f4f3f4'}
-          trackColor={{ false: '#767577', true: Colors.light.gradientRight }}
+          onValueChange={toggleTheme}
+          thumbColor={isDark ? theme.gradientLeft : '#f4f3f4'}
+          trackColor={{ false: '#767577', true: theme.gradientRight }}
         />
       </View>
 
       {/* Język do wyboru */}
-      <Pressable style={styles.row} onPress={handleLanguageChange}>
-        <GlobeAltIcon size={24} color={Colors.light.indicatorInfo}/>
-        <Text style={styles.rowLabel}>{t('settings.language')}</Text>
-        <Text style={styles.rowValue}>{currentLangLabel}</Text>
+      <Pressable
+        style={[styles.row, { backgroundColor: isDark ? theme.cardBackground : '#FFF' }]}
+        onPress={handleLanguageChange}
+      >
+        <GlobeAltIcon size={24} color={theme.indicatorInfo} />
+        <Text style={[styles.rowLabel, { color: theme.textPrimary }]}>
+          {t('settings.language')}
+        </Text>
+        <Text style={[styles.rowValue, { color: theme.indicatorInfo }]}>
+          {currentLangLabel}
+        </Text>
       </Pressable>
     </SafeAreaView>
   );
@@ -92,7 +103,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   avatarText: { color: '#FFF', fontWeight: 'bold', fontSize: 18 },
-  name:  { fontSize: 16, fontWeight: '600' },
+  name: { fontSize: 16, fontWeight: '600' },
 
   sectionHeaderText: {
     paddingTop: 16,
@@ -118,5 +129,5 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   rowLabel: { flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '500' },
-  rowValue: { fontWeight: '600', color: Colors.light.indicatorInfo },
+  rowValue: { fontWeight: '600' },
 });

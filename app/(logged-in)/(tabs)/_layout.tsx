@@ -9,25 +9,27 @@ import { HomeIcon as HomeIconSolid,
          UsersIcon as UsersIconSolid,
          Cog6ToothIcon as Cog6ToothIconSolid, } from 'react-native-heroicons/solid'
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/app/context/ThemeContext';
 
 export default function TabLayout() {
     const insets = useSafeAreaInsets();
     const { t } = useTranslation();
+    const { theme } = useTheme();
 
     return (
         <Tabs
             screenOptions={{
                 //headerShown: false,
-                tabBarStyle: {
-                    backgroundColor: '#F5F5F5',
-                },
-                tabBarActiveTintColor: Colors.light.backgroundPrimary,
-                tabBarInactiveTintColor: Colors.light.backgroundPrimary,
+                // tabBarStyle: {
+                //     backgroundColor: '#F5F5F5',
+                // },
+                tabBarActiveTintColor: theme.backgroundPrimary,
+                tabBarInactiveTintColor: theme.backgroundPrimary,
                 
                 tabBarBackground: () => (
-                    <View style={{ flex: 1, borderTopWidth: 2, borderTopColor: Colors.light.navbarBorder, overflow: 'hidden'}}>
+                    <View style={{ flex: 1, borderTopWidth: 2, borderTopColor: theme.navbarBorder}}>
                         <LinearGradient 
-                            colors={[Colors.light.gradientLeft, Colors.light.gradientRight]}
+                            colors={[theme.gradientLeft, theme.gradientRight]}
                             start={[0, 0]}
                             end={[1, 0]}
                             style={{flex: 1}}
