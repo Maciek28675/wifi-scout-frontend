@@ -23,8 +23,8 @@ export default function TabLayout() {
                 // tabBarStyle: {
                 //     backgroundColor: '#F5F5F5',
                 // },
-                tabBarActiveTintColor: theme.backgroundPrimary,
-                tabBarInactiveTintColor: theme.backgroundPrimary,
+                tabBarActiveTintColor: '#FFFFFF',
+                tabBarInactiveTintColor: '#FFFFFF',
                 
                 tabBarBackground: () => (
                     <View style={{ flex: 1, borderTopWidth: 2, borderTopColor: theme.navbarBorder}}>
@@ -55,7 +55,7 @@ export default function TabLayout() {
             }}/>
             <Tabs.Screen name="map" options={{
                 title: t('tabs.map'),
-                //headerShown: false,
+                headerShown: false,
                 tabBarIcon: ({color, focused}) => 
                     focused ? (
                         <MapIconSolid color={color} size={24}/>

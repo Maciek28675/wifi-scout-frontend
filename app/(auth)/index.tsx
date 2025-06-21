@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   buttonText: {
-    color: Colors.light.textPrimary,
+    color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 24
   }
