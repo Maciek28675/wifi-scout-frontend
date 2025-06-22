@@ -6,20 +6,23 @@ interface props {
     label: string,
     color: string,
     loading: boolean
+    cardColor?: string;
+    textColor?: string;
+
 }
 
-const NetworkInfo: React.FC<props> = ({data, label, color, loading}) => {
+const NetworkInfo: React.FC<props> = ({data, label, color, loading, cardColor = "#FFF", textColor = "#000"}) => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: cardColor }]}>
             {loading ? (
-                <ActivityIndicator size={'small'} color={Colors.light.gradientRight}/>
+                <ActivityIndicator size={'small'} color={color}/>
             ) : (
                 <Text style={[styles.dataText, {color: color}]}>
                     {data.toString()}
                 </Text>
             )}
             
-            <Text style={styles.labelText}>
+            <Text style={[styles.labelText, { color: textColor }]}>
                 {label}
             </Text>
         </View>
@@ -28,7 +31,6 @@ const NetworkInfo: React.FC<props> = ({data, label, color, loading}) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#FFF",
         borderCurve: 'continuous',
         borderRadius: 12,
         alignItems: 'center',

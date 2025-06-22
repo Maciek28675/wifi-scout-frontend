@@ -26,6 +26,9 @@ import testPing from "@/utils/testPing";
 import { addActivity, getActivities, getActivitiesLength, Activity } from "@/utils/activities";
 
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/app/context/ThemeContext';
+
+
 interface Measurement {
     latitude: number,
     longitude: number,
@@ -37,6 +40,7 @@ interface Measurement {
 
 export default function Home() {
     const { t } = useTranslation();
+    const { theme, isDark } = useTheme();
 
     // Listen for network related changes
     const networkState = useNetworkState();
@@ -331,61 +335,133 @@ export default function Home() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundPrimary }]}
+        >
 
             <View style={styles.headerWrapper}>
-                <Text style={styles.headerText}>WiFi Scout</Text>
-                <AnimatedButton scale={scaleRefresh} onPress={onRefreshClick} buttonStyles={{backgroundColor: Colors.light.gradientLeft, padding: 8, borderRadius: 24}}>
+                <Text style={[styles.headerText, { color: theme.textPrimary }]}>
+                    WiFi Scout
+                </Text>
+                <AnimatedButton 
+                scale={scaleRefresh} 
+                onPress={onRefreshClick} 
+                buttonStyles={{
+                    backgroundColor: theme.gradientLeft, 
+                    padding: 8, 
+                    borderRadius: 24,
+                    }}
+                >
                     <ArrowPathIcon size={24} color={'#FFF'}/>
                 </AnimatedButton>
             </View>
 
             <View style={styles.speedTestResultContainer}>
-                <NetworkInfo data={downloadSpeed} label={t('network.download_speed')} color={Colors.light.gradientRight} loading={isDownloadLoading}/>
-                <NetworkInfo data={uploadSpeed} label={t('network.upload_speed')} color={Colors.light.gradientRight} loading={isUploadLoading}/>
-                <NetworkInfo data={ping} label={t('network.ping')} color={Colors.light.gradientRight} loading={isPingLoading}/>
+                <NetworkInfo 
+                    data={downloadSpeed} 
+                    label={t('network.download_speed')} 
+                    color={theme.gradientRight} 
+                    loading={isDownloadLoading}
+                    cardColor={theme.cardBackground}
+                    textColor={theme.textPrimary}
+                />
+                <NetworkInfo 
+                    data={uploadSpeed} 
+                    label={t('network.upload_speed')} 
+                    color={theme.gradientRight} 
+                    loading={isUploadLoading}
+                    cardColor={theme.cardBackground}
+                    textColor={theme.textPrimary}
+                />
+                <NetworkInfo 
+                    data={ping} 
+                    label={t('network.ping')} 
+                    color={theme.gradientRight} 
+                    loading={isPingLoading}
+                    cardColor={theme.cardBackground}
+                    textColor={theme.textPrimary}
+                />
             </View>
 
             <View style={styles.networkInfoButtonsContainer}>
-                <AnimatedButton scale={scaleInfo} onPress={openMessage} buttonStyles={styles.wifiNameButtonContainer}>
+                <AnimatedButton 
+                    scale={scaleInfo} 
+                    onPress={openMessage} 
+                    buttonStyles={[
+                        styles.wifiNameButtonContainer,
+                        { backgroundColor: theme.cardBackground },
+                    ]}
+                >
                     <Text
                         style={[ styles.wifiNameButtonText,
                             {
                             color:
                                 networkState.type !== Network.NetworkStateType.WIFI
-                                    ? Colors.light.indicatorBad
+                                    ? theme.indicatorBad
                                     : isEduroamConnected && networkState.type === Network.NetworkStateType.WIFI
-                                    ? Colors.light.indicatorInfo
-                                    : Colors.light.indicatorMid,
-                            }]}
+                                    ? theme.indicatorInfo
+                                    : theme.indicatorMid,
+                            }]
+                        }
                     >
                         {networkInfo}
-                    </Text>
-                    
+                    </Text>    
                 </AnimatedButton>
-                <AnimatedButton scale={scaleConnect} onPress={openModal} buttonStyles={styles.connectButtonContainer}>
-                    <Text style={styles.connectButtonText}>{t('network.connect')}</Text>
+
+                <AnimatedButton 
+                    scale={scaleConnect} 
+                    onPress={openModal} 
+                    buttonStyles={[
+                        styles.connectButtonContainer,
+                        { backgroundColor: theme.gradientLeft },
+                    ]}
+                >
+                    <Text style={styles.connectButtonText}>
+                        {t('network.connect')}
+                    </Text>
                 </AnimatedButton>
             </View>
 
             <View style={styles.lastActivitiesHeaderContainer}>
-                <Text style={styles.lastActivitiesHeaderText}>
+                <Text 
+                    style={[
+                        styles.lastActivitiesHeaderText,
+                        { color: theme.textPrimary },
+                    ]}
+                >
                     {t('network.last_activities')}
                 </Text>
             </View>
             
             {/* #TODO: Fix shadow */ }
-            <FlatList
-                data={activities}
-                keyExtractor={(item) => item.timestamp.toString()}
-                renderItem={({item}) => (
-                    <ActivitySummary activity={item}/>
-                )}
-                style={styles.lastActivitiesContainer}
-            />
+            <View
+                style={[
+                    styles.lastActivitiesContainer,
+                    { backgroundColor: theme.cardBackground }
+                ]}
+            >
+                <FlatList
+                    data={activities}
+                    keyExtractor={(item) => item.timestamp.toString()}
+                    renderItem={({item}) => (
+                        <ActivitySummary activity={item}/>
+                    )}
+                    style={[
+                        styles.lastActivitiesContainer,
+                        { backgroundColor: theme.cardBackground },
+                    ]}
+                />
+            </View>
 
             <View style={styles.actionButtonsContainer}>
-                <AnimatedButton scale={scaleScan} onPress={testNetworkParameters} disabled={isTestLoading} buttonStyles={styles.quickScanButtonContainer}>
+                <AnimatedButton 
+                    scale={scaleScan} 
+                    onPress={testNetworkParameters} 
+                    disabled={isTestLoading} 
+                    buttonStyles={[
+                        styles.quickScanButtonContainer,
+                        { backgroundColor: theme.gradientLeft },
+                    ]}
+                >
                     {isTestLoading ? (
                             <Text style={styles.quickScanButtonText}>{t('network.testing')}</Text>
                         ): (
@@ -434,7 +510,6 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F5F5'
     },
 
     headerWrapper: {
@@ -442,8 +517,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 24,
         flexDirection: 'row',
-
     },
+
     headerText: {
         fontSize: 28,
         fontWeight: 'bold',
@@ -464,14 +539,14 @@ const styles = StyleSheet.create({
         gap: 16,
         marginHorizontal: 16
     },
+
     connectButtonContainer: {
-        backgroundColor: Colors.light.gradientLeft,
         flex: 1/2,
         borderRadius: 12,
         borderCurve: 'continuous',
         paddingVertical: 16,
         shadowColor: '#0e588c',
-        shadowOpacity: 0.4,
+        shadowOpacity: 0.1,
         shadowRadius: 12,
         shadowOffset: {
             width: 0,
@@ -482,11 +557,10 @@ const styles = StyleSheet.create({
 
     wifiNameButtonContainer: {
         flex: 1/2,
-        backgroundColor: "#FFF",
         borderRadius: 12,
         borderCurve: 'continuous',
         paddingVertical: 16,
-        shadowColor: '#000000',
+        shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 12,
         shadowOffset: {
@@ -495,13 +569,14 @@ const styles = StyleSheet.create({
         },
         elevation: 2,
     },
+
     connectButtonText: {
         color: "#FFF",
         fontSize: 16,
         fontWeight: '600'
     },
+
     wifiNameButtonText: {
-        color: "#B22D2D",
         fontSize: 16,
         fontWeight: '600'
     },
@@ -513,8 +588,8 @@ const styles = StyleSheet.create({
         gap: 16,
         marginHorizontal: 16
     },
+
     quickScanButtonContainer: {
-        backgroundColor: Colors.light.gradientLeft,
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 16,
@@ -523,7 +598,7 @@ const styles = StyleSheet.create({
         marginBottom: 32,
         borderCurve: 'continuous',
         shadowColor: '#0e588c',
-        shadowOpacity: 0.4,
+        shadowOpacity: 0.1,
         shadowRadius: 12,
         shadowOffset: {
             width: 0,
@@ -541,6 +616,7 @@ const styles = StyleSheet.create({
     refreshButtonContainer: {
 
     },
+
     refreshButtonText: {
         color: '#FFF',
         fontSize: 16,
@@ -550,11 +626,10 @@ const styles = StyleSheet.create({
     lastActivitiesContainer: {
         borderRadius: 12,
         borderCurve: 'continuous',
-        backgroundColor: '#FFF',
         marginHorizontal: 16,
         marginBottom: 32,
         shadowColor: '#000000',
-        shadowOpacity: 0.5,
+        shadowOpacity: 0.1,
         shadowRadius: 24,
         shadowOffset: {
             width: 0,
@@ -562,6 +637,7 @@ const styles = StyleSheet.create({
         },
         elevation: 2,
     },
+
     lastActivitiesHeaderContainer: {
         alignItems: 'flex-start',
         marginHorizontal: 16,
@@ -569,6 +645,7 @@ const styles = StyleSheet.create({
         marginBottom: 16
 
     },
+
     lastActivitiesHeaderText: {
         fontSize: 24,
         fontWeight: '700'

@@ -254,13 +254,29 @@ interface measurementPoint {
                     {t('map.connected_header')}
                 </Text>
                 <View style={styles.buttonsContainer}>
-                    <AnimatedButton scale={scaleLegend} onPress={() => { }} buttonStyles={[styles.legendButtonContainer, { backgroundColor: theme.cardBackground }]}>
-                        <Text style={[styles.legendButtonText, { color: isDark ? '#4DA6FF' : theme.gradientLeft }]}>
+                    <AnimatedButton 
+                        scale={scaleLegend} 
+                        onPress={() => { }} 
+                        buttonStyles={[
+                            styles.legendButtonContainer, 
+                            { backgroundColor: theme.cardBackground },
+                        ]}
+                    >
+                        <Text style={[styles.legendButtonText, { color: isDark ? theme.indicatorInfo : theme.gradientLeft }]}>
                             {t('map.legend')}
                         </Text>
                     </AnimatedButton>
-                    <AnimatedButton scale={scaleUpdate} onPress={onRefresh} buttonStyles={styles.updateButtonContainer}>
-                        <Text style={styles.updateButtonText}>{t('map.refresh')}</Text>
+                    <AnimatedButton 
+                        scale={scaleUpdate} 
+                        onPress={onRefresh} 
+                        buttonStyles={[
+                            styles.updateButtonContainer,
+                            { backgroundColor: theme.gradientLeft }
+                        ]}
+                    >
+                        <Text style={styles.updateButtonText}>
+                            {t('map.refresh')}
+                        </Text>
                     </AnimatedButton>
                 </View>
             </View>
@@ -330,7 +346,7 @@ const styles = StyleSheet.create({
         borderCurve: 'continuous',
         paddingVertical: 16,
         shadowColor: '#0e588c',
-        shadowOpacity: 0.4,
+        shadowOpacity: 0.1,
         shadowRadius: 12,
         shadowOffset: {
             width: 0,
