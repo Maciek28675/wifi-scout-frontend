@@ -26,6 +26,7 @@ import testPing from "@/utils/testPing";
 import { addActivity, getActivities, getActivitiesLength, Activity } from "@/utils/activities";
 
 import { useTranslation } from 'react-i18next';
+
 interface Measurement {
     latitude: number,
     longitude: number,
@@ -181,7 +182,8 @@ export default function Home() {
 
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 
-        if (!isEduroamConnected || networkState.type !== Network.NetworkStateType.WIFI) {
+        // !isEduroamConnected || networkState.type !== Network.NetworkStateType.WIFI
+        if (false) {
             Toast.show({
                 type: 'error',
                 text1: t('network.error_title'),
@@ -261,17 +263,20 @@ export default function Home() {
                 body: JSON.stringify(requestBody)
             })
 
-            if(response.ok) {
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+            if (!response.ok) {
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
 
                 Toast.show({
-                    type: "success",
-                    text1: t('network.success_title'),
-                    text2: t('network.success_message')
+                    type: "error",
+                    text1: 'Błąd podczas zapisu testu',
+                    text2: 'Spróbuj ponownie'
                 })
+
+                return;
             }
 
             const result = await response.json()
+
             const newActivity: Activity = {
                 latitude: result.latitude,
                 longitude: result.longitude,
@@ -279,21 +284,24 @@ export default function Home() {
                 download_speed: download,
                 upload_speed: upload,
                 ping: ping,
-                color: Colors.light.indicatorGood,
-                building: 'Kampus Grunwaldzki', // TODO: Add fetch for building name based on localization,
+                color: result.color,
+                building: result.building_name,
                 timestamp: result.timestamp
             }
 
-            addActivity(newActivity)
-
-            const activities = await getActivities();
-            const sortedActivities = activities.sort(
-                (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-            );
-
-            setActivities(sortedActivities)
-
+            setActivities(prev => [newActivity, ...prev]);
+            await addActivity(newActivity)
+            
             console.log(`Backend response: ${JSON.stringify(result)}`)
+
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+
+            Toast.show({
+                type: "success",
+                text1: t('network.success_title'),
+                text2: t('network.success_message')
+            })
+            
         }
     }
 
@@ -375,14 +383,15 @@ export default function Home() {
             </View>
             
             {/* #TODO: Fix shadow */ }
+            <View style={styles.lastActivitiesContainer}>
             <FlatList
                 data={activities}
-                keyExtractor={(item) => item.timestamp.toString()}
+                keyExtractor={(item) => item?.timestamp?.toString() ?? Math.random().toString()}
                 renderItem={({item}) => (
                     <ActivitySummary activity={item}/>
                 )}
-                style={styles.lastActivitiesContainer}
             />
+            </View>
 
             <View style={styles.actionButtonsContainer}>
                 <AnimatedButton scale={scaleScan} onPress={testNetworkParameters} disabled={isTestLoading} buttonStyles={styles.quickScanButtonContainer}>
@@ -434,7 +443,8 @@ export default function Home() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F5F5'
+        backgroundColor: '#F5F5F5',
+        paddingTop: Platform.OS === 'android' ? 25 : 0
     },
 
     headerWrapper: {
@@ -475,9 +485,9 @@ const styles = StyleSheet.create({
         shadowRadius: 12,
         shadowOffset: {
             width: 0,
-            height: 4
+            height: 3
         },
-        elevation: 2,
+        elevation: 10,
     },
 
     wifiNameButtonContainer: {
@@ -549,18 +559,19 @@ const styles = StyleSheet.create({
 
     lastActivitiesContainer: {
         borderRadius: 12,
-        borderCurve: 'continuous',
+        borderCurve: 'circular',
         backgroundColor: '#FFF',
         marginHorizontal: 16,
         marginBottom: 32,
         shadowColor: '#000000',
-        shadowOpacity: 0.5,
-        shadowRadius: 24,
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
         shadowOffset: {
             width: 0,
-            height: 20
+            height: 6
         },
         elevation: 2,
+        flex: 1
     },
     lastActivitiesHeaderContainer: {
         alignItems: 'flex-start',

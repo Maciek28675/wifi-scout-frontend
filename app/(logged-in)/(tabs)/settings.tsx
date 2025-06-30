@@ -7,6 +7,7 @@ import {
   Switch,
   Pressable,
   SafeAreaView,
+  Platform
 } from 'react-native';
 import "@/app/i18n";
 import { useTranslation } from 'react-i18next';
@@ -37,7 +38,9 @@ export default function Settings() {
     <SafeAreaView style={styles.container}>
 
       {/* Nagłówek */}
-      <Text style={styles.sectionHeaderText}>{t("settings.app_settings")}</Text>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>{t("settings.app_settings")}</Text>
+      </View>
 
       {/* Motyw do wyboru */}
       <View style={styles.row}>
@@ -48,7 +51,7 @@ export default function Settings() {
           value={isDark}
           onValueChange={() => setIsDark(!isDark)}
           thumbColor={isDark ? Colors.light.gradientLeft : '#f4f3f4'}
-          trackColor={{ false: '#767577', true: Colors.light.gradientRight }}
+          trackColor={{ false: '#cbcacc', true: '#cbcacc'}}
         />
       </View>
 
@@ -66,8 +69,8 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.backgroundPrimary,
-    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    paddingTop: Platform.OS === 'android' ? 25 : 0
   },
   card: {
     flexDirection: 'row',
@@ -78,8 +81,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
     elevation: 2,
   },
   avatar: {
@@ -94,14 +97,13 @@ const styles = StyleSheet.create({
   avatarText: { color: '#FFF', fontWeight: 'bold', fontSize: 18 },
   name:  { fontSize: 16, fontWeight: '600' },
 
+  sectionHeader: {
+    marginVertical: 24,
+  },
   sectionHeaderText: {
-    paddingTop: 16,
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#555',
-    marginTop: 24,
-    marginBottom: 8,
-    marginLeft: 12, // przesunięcie od lewej krawędzi
+    fontSize: 28,
+    fontWeight: 'bold',
+    lineHeight: 28
   },
 
   row: {
@@ -115,8 +117,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 1,
+    elevation: 2,
   },
-  rowLabel: { flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '500' },
-  rowValue: { fontWeight: '600', color: Colors.light.indicatorInfo },
+  rowLabel: { flex: 1, marginLeft: 12, fontSize: 16, fontWeight: '600' },
+  rowValue: { fontSize: 14, fontWeight: '600', color: Colors.light.indicatorInfo },
 });

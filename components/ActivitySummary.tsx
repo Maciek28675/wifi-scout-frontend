@@ -15,6 +15,10 @@ interface props {
     activity: Activity
 }
 
+interface Messages {
+    [key: string]: string;
+}
+
 const ActivitySummary: React.FC<props> = ({activity}) => {
 
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
@@ -25,6 +29,12 @@ const ActivitySummary: React.FC<props> = ({activity}) => {
         longitude: 17.060385434296492,
         latitudeDelta: 0.005,
         longitudeDelta: 0.01,
+    }
+
+    const messages: Messages = {
+        '#B22D2D': 'Słabe',
+        '#E4A316': 'Średnie',
+        '#67B22D': 'Dobre'
     }
 
     const onClick = () => {
@@ -49,7 +59,7 @@ const ActivitySummary: React.FC<props> = ({activity}) => {
                 </View>
                 <View style={styles.textContainer}>
                     <Text style={styles.mainText}>
-                        Wykryto dobre połączenie
+                        Wykryto {messages[activity.color]} połączenie
                     </Text>
                     <Text style={styles.subText}>
                         {activity.building}
@@ -157,6 +167,9 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 200,
         marginTop: 16,
+        borderRadius: 18,
+        borderCurve: 'circular',
+        overflow: 'hidden'
     },
     map: {
         width: '100%',

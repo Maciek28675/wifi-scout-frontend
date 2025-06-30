@@ -41,6 +41,15 @@ export async function addActivity(newActivity: Activity) {
     }
 }
 
+export async function clearActivities() {
+    try {
+        await AsyncStorage.removeItem(ACTIVITIES_KEY);
+        console.log('Activities cleared.');
+    } catch (e) {
+        console.error('Failed to clear activities', e);
+    }
+}
+
 
 export async function getActivitiesLength() {
   const activities = await getActivities();

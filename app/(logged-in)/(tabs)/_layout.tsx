@@ -53,7 +53,7 @@ export default function TabLayout() {
             }}/>
             <Tabs.Screen name="map" options={{
                 title: t('tabs.map'),
-                //headerShown: false,
+                headerShown: false,
                 tabBarIcon: ({color, focused}) => 
                     focused ? (
                         <MapIconSolid color={color} size={24}/>

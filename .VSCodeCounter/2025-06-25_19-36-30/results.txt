@@ -1,0 +1,47 @@
+Date : 2025-06-25 19:36:30
+Directory : d:\wifi_scout\wifi_scout_frontend\app
+Total : 11 files,  1186 codes, 68 comments, 179 blanks, all 1433 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript JSX |          8 |      1,010 |         60 |        164 |      1,234 |
+| JSON           |          2 |        104 |          0 |          0 |        104 |
+| TypeScript     |          1 |         72 |          8 |         15 |         95 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                       | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| (auth)                                                                     |          2 |        170 |          7 |         16 |        193 |
+| (logged-in)                                                                |          5 |        824 |         53 |        143 |      1,020 |
+| (logged-in) (Files)                                                        |          1 |          8 |          1 |          3 |         12 |
+| (logged-in)\(tabs)                                                         |          4 |        816 |         52 |        140 |      1,008 |
+| .                                                                          |         11 |      1,186 |         68 |        179 |      1,433 |
+| . (Files)                                                                  |          1 |         16 |          0 |          5 |         21 |
+| i18n                                                                       |          3 |        176 |          8 |         15 |        199 |
+| i18n (Files)                                                               |          1 |         72 |          8 |         15 |         95 |
+| i18n\locales                                                               |          2 |        104 |          0 |          0 |        104 |
+| i18n\locales\en-US                                                         |          1 |         52 |          0 |          0 |         52 |
+| i18n\locales\pl-PL                                                         |          1 |         52 |          0 |          0 |         52 |
++----------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                   | language       | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| d:\wifi_scout\wifi_scout_frontend\app\(auth)\_layout.tsx                   | TypeScript JSX |          8 |          0 |          1 |          9 |
+| d:\wifi_scout\wifi_scout_frontend\app\(auth)\index.tsx                     | TypeScript JSX |        162 |          7 |         15 |        184 |
+| d:\wifi_scout\wifi_scout_frontend\app\(logged-in)\(tabs)\_layout.tsx       | TypeScript JSX |         72 |          1 |          6 |         79 |
+| d:\wifi_scout\wifi_scout_frontend\app\(logged-in)\(tabs)\index.tsx         | TypeScript JSX |        453 |         43 |         92 |        588 |
+| d:\wifi_scout\wifi_scout_frontend\app\(logged-in)\(tabs)\map.tsx           | TypeScript JSX |        188 |          1 |         27 |        216 |
+| d:\wifi_scout\wifi_scout_frontend\app\(logged-in)\(tabs)\settings.tsx      | TypeScript JSX |        103 |          7 |         15 |        125 |
+| d:\wifi_scout\wifi_scout_frontend\app\(logged-in)\_layout.tsx              | TypeScript JSX |          8 |          1 |          3 |         12 |
+| d:\wifi_scout\wifi_scout_frontend\app\_layout.tsx                          | TypeScript JSX |         16 |          0 |          5 |         21 |
+| d:\wifi_scout\wifi_scout_frontend\app\i18n\index.ts                        | TypeScript     |         72 |          8 |         15 |         95 |
+| d:\wifi_scout\wifi_scout_frontend\app\i18n\locales\en-US\translations.json | JSON           |         52 |          0 |          0 |         52 |
+| d:\wifi_scout\wifi_scout_frontend\app\i18n\locales\pl-PL\translations.json | JSON           |         52 |          0 |          0 |         52 |
+| Total                                                                      |                |      1,186 |         68 |        179 |      1,433 |
++----------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

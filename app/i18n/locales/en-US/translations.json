@@ -5,7 +5,7 @@
         "language": "Language"
     },
     "auth": {
-        "login": "Log In",
+        "login": "Get started!",
         "register": "Register",
         "to_home": "Go to Home"
     },

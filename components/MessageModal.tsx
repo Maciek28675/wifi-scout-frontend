@@ -52,10 +52,10 @@ const MessageModal: React.FC<props> = ({messageType, headerText, mainText, secon
 
 const styles = StyleSheet.create({
   modalContainer: {
-        backgroundColor: '#00000080',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
+    backgroundColor: '#00000080',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   modalContent: {
     borderRadius: 18,
