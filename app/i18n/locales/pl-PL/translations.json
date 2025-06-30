@@ -48,5 +48,10 @@
         "map": "Mapa",
         "forum": "Forum",
         "settings": "Ustawienia"
+    },
+    "map": {
+        "connected_header": "Mapa Eduroam",
+        "legend": "Legenda",
+        "refresh": "Odśwież"
     }
 }

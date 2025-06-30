@@ -48,5 +48,10 @@
         "map": "Map",
         "forum": "Forum",
         "settings": "Settings"
+    },
+    "map": {
+        "connected_header": "Eduroam Map",
+        "legend": "Legend",
+        "refresh": "Refresh"
     }
 }

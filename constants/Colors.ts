@@ -3,10 +3,11 @@ export const Colors = {
         gradientLeft: '#1575B9',
         gradientRight: '#3ED6B7',
 
-        textPrimary: '#FFFFFF',
+        textPrimary: '#222222',
         textSecondary: '#B2B2B2',
 
         backgroundPrimary: '#FFFFFF',
+        cardBackground: '#FFFFFF',
 
         navbarBorder: '#0F608D',
 
@@ -17,6 +18,20 @@ export const Colors = {
     },
 
     dark: {
+        gradientLeft: '#0D3A60',
+        gradientRight: '#1B8A77',
 
+        textPrimary: '#FFFFFF',
+        textSecondary: '#C0C0C0',
+
+        backgroundPrimary: '#1C1C1E',
+        cardBackground: '#2C2C2E',
+
+        navbarBorder: '#2E2E2E',
+
+        indicatorBad: '#FF6B6B',
+        indicatorMid: '#FFC300',
+        indicatorGood: '#7ED957',
+        indicatorInfo: '#4AA8D8',
     }
 }

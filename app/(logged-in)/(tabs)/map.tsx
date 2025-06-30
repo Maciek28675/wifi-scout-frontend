@@ -4,6 +4,8 @@ import { useLocalSearchParams, useFocusEffect } from "expo-router";
 import {useState, useCallback, useEffect, useRef} from 'react';
 import {Colors} from '@/constants/Colors'
 import AnimatedButton from "@/components/AnimatedButton";
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/app/context/ThemeContext';
 
 interface measurementPoint {
     center: LatLng,
@@ -11,6 +13,8 @@ interface measurementPoint {
     color: string
 }
  export default function Home() {
+    const { t } = useTranslation();
+    const { theme, isDark } = useTheme();
 
     // Animation scale declarations
     const scaleLegend = useRef(new Animated.Value(1)).current;
@@ -244,29 +248,49 @@ interface measurementPoint {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.optionsContainer}>
-                <Text style={styles.headerText}>Mapa Eduroam</Text>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.backgroundPrimary }]}>
+            <View style={[styles.optionsContainer, { borderBottomColor: theme.navbarBorder }]}>
+                <Text style={[styles.headerText, { color: theme.textPrimary }]}>
+                    {t('map.connected_header')}
+                </Text>
                 <View style={styles.buttonsContainer}>
-                    <AnimatedButton scale={scaleLegend} onPress={() => {}} buttonStyles={styles.legendButtonContainer}>
-                        <Text style={styles.legendButtonText}>Legenda</Text>
+                    <AnimatedButton 
+                        scale={scaleLegend} 
+                        onPress={() => { }} 
+                        buttonStyles={[
+                            styles.legendButtonContainer, 
+                            { backgroundColor: theme.cardBackground },
+                        ]}
+                    >
+                        <Text style={[styles.legendButtonText, { color: isDark ? theme.indicatorInfo : theme.gradientLeft }]}>
+                            {t('map.legend')}
+                        </Text>
                     </AnimatedButton>
-                    <AnimatedButton scale={scaleUpdate} onPress={onRefresh} buttonStyles={styles.updateButtonContainer}>
-                        <Text style={styles.updateButtonText}>Odśwież</Text>
+                    <AnimatedButton 
+                        scale={scaleUpdate} 
+                        onPress={onRefresh} 
+                        buttonStyles={[
+                            styles.updateButtonContainer,
+                            { backgroundColor: theme.gradientLeft }
+                        ]}
+                    >
+                        <Text style={styles.updateButtonText}>
+                            {t('map.refresh')}
+                        </Text>
                     </AnimatedButton>
                 </View>
             </View>
             <View style={styles.mapContainer}>
-                <MapView style={styles.map}
+                <MapView
+                    style={styles.map}
                     region={region}
-                    cameraZoomRange={{minCenterCoordinateDistance: 200, maxCenterCoordinateDistance: 4000}}
+                    cameraZoomRange={{ minCenterCoordinateDistance: 200, maxCenterCoordinateDistance: 4000 }}
                     showsMyLocationButton={true}
                     showsUserLocation={true}
                 >
                     {circlesNew.map((item) => (
-                        <Circle key={item.id} center={item.center} radius={5} strokeColor="transparent" fillColor={item.color}/>
+                        <Circle key={item.id} center={item.center} radius={5} strokeColor="transparent" fillColor={item.color} />
                     ))}
-
                     {/* TODO: Add campus border*/}
                 </MapView>
             </View>
@@ -293,7 +317,6 @@ const styles = StyleSheet.create({
     optionsContainer: {
         marginVertical: 16,
         borderBottomWidth: 1,
-        borderBottomColor: '#dbdbdb',
         paddingBottom: 8,
         marginHorizontal: 16
     },
@@ -304,7 +327,6 @@ const styles = StyleSheet.create({
 
     legendButtonContainer: {
         flex: 1/2,
-        backgroundColor: "#FFF",
         borderRadius: 12,
         borderCurve: 'continuous',
         paddingVertical: 16,
@@ -324,7 +346,7 @@ const styles = StyleSheet.create({
         borderCurve: 'continuous',
         paddingVertical: 16,
         shadowColor: '#0e588c',
-        shadowOpacity: 0.4,
+        shadowOpacity: 0.1,
         shadowRadius: 12,
         shadowOffset: {
             width: 0,
@@ -333,7 +355,6 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     legendButtonText: {
-        color: Colors.light.gradientLeft,
         fontSize: 16,
         fontWeight: '600'
     },
